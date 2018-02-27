@@ -52,7 +52,7 @@ import org.arp.javautil.string.StringUtil;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
 
-import edu.emory.cci.aiw.cvrg.eureka.services.comm.clients.EtlClient;
+import org.eurekaclinical.protempa.client.client.ProtempaClient;
 
 import org.eurekaclinical.eureka.client.comm.FileSourceConfigOption;
 import org.eurekaclinical.eureka.client.comm.SourceConfig;
@@ -73,10 +73,10 @@ import org.eurekaclinical.standardapis.exception.HttpStatusException;
 @Consumes(MediaType.APPLICATION_JSON)
 public class SourceConfigResource {
 
-	private final EtlClient etlClient;
+	private final ProtempaClient etlClient;
 
 	@Inject
-	public SourceConfigResource(EtlClient inEtlClient) {
+	public SourceConfigResource(ProtempaClient inEtlClient) {
 		this.etlClient = inEtlClient;
 	}
 

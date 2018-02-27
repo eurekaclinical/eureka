@@ -39,14 +39,14 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.etl.comm.EtlCohortDestination;
-import edu.emory.cci.aiw.cvrg.eureka.etl.comm.EtlDestination;
-import edu.emory.cci.aiw.cvrg.eureka.etl.comm.EtlDestinationVisitor;
-import edu.emory.cci.aiw.cvrg.eureka.etl.comm.EtlI2B2Destination;
-import edu.emory.cci.aiw.cvrg.eureka.etl.comm.EtlNeo4jDestination;
-import edu.emory.cci.aiw.cvrg.eureka.etl.comm.EtlPatientSetExtractorDestination;
-import edu.emory.cci.aiw.cvrg.eureka.etl.comm.EtlPatientSetSenderDestination;
-import edu.emory.cci.aiw.cvrg.eureka.etl.comm.EtlTabularFileDestination;
+import org.eurekaclinical.protempa.client.comm.EtlCohortDestination;
+import org.eurekaclinical.protempa.client.comm.EtlDestination;
+import org.eurekaclinical.protempa.client.comm.EtlDestinationVisitor;
+import org.eurekaclinical.protempa.client.comm.EtlI2B2Destination;
+import org.eurekaclinical.protempa.client.comm.EtlNeo4jDestination;
+import org.eurekaclinical.protempa.client.comm.EtlPatientSetExtractorDestination;
+import org.eurekaclinical.protempa.client.comm.EtlPatientSetSenderDestination;
+import org.eurekaclinical.protempa.client.comm.EtlTabularFileDestination;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.AuthorizedUserDao;
 import edu.emory.cci.aiw.cvrg.eureka.etl.entity.CohortDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.entity.CohortEntity;

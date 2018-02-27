@@ -40,7 +40,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  * #L%
  */
 
-import edu.emory.cci.aiw.cvrg.eureka.etl.comm.EtlCohortDestination;
+import org.eurekaclinical.protempa.client.comm.EtlCohortDestination;
 import edu.emory.cci.aiw.cvrg.eureka.etl.entity.CohortDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dao.EtlGroupDao;

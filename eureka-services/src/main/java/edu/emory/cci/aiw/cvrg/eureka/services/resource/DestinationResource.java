@@ -44,8 +44,8 @@ import com.sun.jersey.api.client.ClientResponse;
 import org.eurekaclinical.eureka.client.comm.Destination;
 import org.eurekaclinical.eureka.client.comm.DestinationType;
 
-import edu.emory.cci.aiw.cvrg.eureka.services.comm.EtlDestination;
-import edu.emory.cci.aiw.cvrg.eureka.services.comm.clients.EtlClient;
+import org.eurekaclinical.protempa.client.comm.EtlDestination;
+import org.eurekaclinical.protempa.client.client.ProtempaClient;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionSupport;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.DestinationToEtlDestinationVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.EtlDestinationToDestinationVisitor;
@@ -78,12 +78,12 @@ import org.eurekaclinical.standardapis.exception.HttpStatusException;
 @Consumes(MediaType.APPLICATION_JSON)
 public class DestinationResource {
 
-	private final EtlClient etlClient;
+	private final ProtempaClient protempaClient;
 	private final ConversionSupport conversionSupport;
 
 	@Inject
-	public DestinationResource(EtlClient inEtlClient, ConversionSupport inConversionSupport) {
-		this.etlClient = inEtlClient;
+	public DestinationResource(ProtempaClient inEtlClient, ConversionSupport inConversionSupport) {
+		this.protempaClient = inEtlClient;
 		this.conversionSupport = inConversionSupport;
 	}
 
@@ -95,7 +95,7 @@ public class DestinationResource {
 		EtlDestination etlDest = v.getEtlDestination();
 		Long destId;
 		try {
-			destId = this.etlClient.createDestination(etlDest);
+			destId = this.protempaClient.createDestination(etlDest);
 		} catch (ClientException ex) {
 			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
 		}
@@ -110,7 +110,7 @@ public class DestinationResource {
 		inDestination.accept(v);
 		EtlDestination etlDest = v.getEtlDestination();
 		try {
-			this.etlClient.updateDestination(etlDest);
+			this.protempaClient.updateDestination(etlDest);
 		} catch (ClientException ex) {
 			throw new HttpStatusException(Status.INTERNAL_SERVER_ERROR, ex);
 		}
@@ -129,23 +129,23 @@ public class DestinationResource {
 		try {
 			List<? extends EtlDestination> destinations;
 			if (type == null) {
-				destinations = this.etlClient.getDestinations();
+				destinations = this.protempaClient.getDestinations();
 			} else {
 				switch (type) {
 					case I2B2:
-						destinations = this.etlClient.getI2B2Destinations();
+						destinations = this.protempaClient.getI2B2Destinations();
 						break;
 					case COHORT:
-						destinations = this.etlClient.getCohortDestinations();
+						destinations = this.protempaClient.getCohortDestinations();
 						break;
 					case PATIENT_SET_EXTRACTOR:
-						destinations = this.etlClient.getPatientSetExtractorDestinations();
+						destinations = this.protempaClient.getPatientSetExtractorDestinations();
 						break;
 					case PATIENT_SET_SENDER:
-						destinations = this.etlClient.getPatientSetSenderDestinations();
+						destinations = this.protempaClient.getPatientSetSenderDestinations();
 						break;
 					case TABULAR_FILE:
-						destinations = this.etlClient.getTabularFileDestinations();
+						destinations = this.protempaClient.getTabularFileDestinations();
 						break;
 					default:
 						throw new AssertionError("Unexpected type " + type);
@@ -171,7 +171,7 @@ public class DestinationResource {
 		EtlDestinationToDestinationVisitor v
 				= new EtlDestinationToDestinationVisitor(this.conversionSupport);
 		try {
-			this.etlClient.getDestination(inId).accept(v);
+			this.protempaClient.getDestination(inId).accept(v);
 		} catch (ClientException ex) {
 			if (ex.getResponseStatus() == ClientResponse.Status.NOT_FOUND) {
 				throw new HttpStatusException(Status.NOT_FOUND);
@@ -186,7 +186,7 @@ public class DestinationResource {
 	@Path("/{id}")
 	public void delete(@PathParam("id") String inId) {
 		try {
-			this.etlClient.deleteDestination(inId);
+			this.protempaClient.deleteDestination(inId);
 		} catch (ClientException ex) {
 			if (ex.getResponseStatus() == ClientResponse.Status.NOT_FOUND) {
 				throw new HttpStatusException(Status.NOT_FOUND);
