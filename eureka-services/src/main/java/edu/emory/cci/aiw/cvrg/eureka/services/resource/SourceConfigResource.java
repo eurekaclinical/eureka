@@ -52,14 +52,13 @@ import org.arp.javautil.string.StringUtil;
 import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
 
-import org.eurekaclinical.protempa.client.client.ProtempaClient;
-
 import org.eurekaclinical.eureka.client.comm.FileSourceConfigOption;
 import org.eurekaclinical.eureka.client.comm.SourceConfig;
 import org.eurekaclinical.eureka.client.comm.SourceConfigOption;
 import org.eurekaclinical.eureka.client.comm.SourceConfig.Section;
 import org.eurekaclinical.eureka.client.comm.SourceConfigParams;
 import org.eurekaclinical.eureka.client.comm.SourceConfigParams.Upload;
+import org.eurekaclinical.protempa.client.EurekaClinicalProtempaClient;
 import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
 import org.eurekaclinical.common.comm.clients.ClientException;
 import org.eurekaclinical.standardapis.exception.HttpStatusException;
@@ -73,10 +72,10 @@ import org.eurekaclinical.standardapis.exception.HttpStatusException;
 @Consumes(MediaType.APPLICATION_JSON)
 public class SourceConfigResource {
 
-	private final ProtempaClient etlClient;
+	private final EurekaClinicalProtempaClient etlClient;
 
 	@Inject
-	public SourceConfigResource(ProtempaClient inEtlClient) {
+	public SourceConfigResource(EurekaClinicalProtempaClient inEtlClient) {
 		this.etlClient = inEtlClient;
 	}
 

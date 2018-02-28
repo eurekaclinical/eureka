@@ -43,9 +43,9 @@ import com.google.inject.Inject;
 import com.sun.jersey.api.client.ClientResponse;
 import org.eurekaclinical.eureka.client.comm.Destination;
 import org.eurekaclinical.eureka.client.comm.DestinationType;
-
+import org.eurekaclinical.protempa.client.EurekaClinicalProtempaClient;
 import org.eurekaclinical.protempa.client.comm.EtlDestination;
-import org.eurekaclinical.protempa.client.client.ProtempaClient;
+
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionSupport;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.DestinationToEtlDestinationVisitor;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.EtlDestinationToDestinationVisitor;
@@ -78,11 +78,11 @@ import org.eurekaclinical.standardapis.exception.HttpStatusException;
 @Consumes(MediaType.APPLICATION_JSON)
 public class DestinationResource {
 
-	private final ProtempaClient protempaClient;
+	private final EurekaClinicalProtempaClient protempaClient;
 	private final ConversionSupport conversionSupport;
 
 	@Inject
-	public DestinationResource(ProtempaClient inEtlClient, ConversionSupport inConversionSupport) {
+	public DestinationResource(EurekaClinicalProtempaClient inEtlClient, ConversionSupport inConversionSupport) {
 		this.protempaClient = inEtlClient;
 		this.conversionSupport = inConversionSupport;
 	}

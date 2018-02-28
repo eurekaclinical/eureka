@@ -41,9 +41,8 @@ package edu.emory.cci.aiw.cvrg.eureka.services.finder;
 
 import com.sun.jersey.api.client.ClientResponse;
 
-import org.eurekaclinical.protempa.client.client.ProtempaClient;
-
 import org.eurekaclinical.eureka.client.comm.SystemPhenotype;
+import org.eurekaclinical.protempa.client.EurekaClinicalProtempaClient;
 import org.protempa.PropositionDefinition;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -64,10 +63,10 @@ public class SystemPropositionRetriever implements
 
 	private static final Logger LOGGER = LoggerFactory
 			.getLogger(SystemPropositionRetriever.class);
-	private final ProtempaClient etlClient;
+	private final EurekaClinicalProtempaClient etlClient;
 
 	@Inject
-	public SystemPropositionRetriever(ProtempaClient inEtlClient) {
+	public SystemPropositionRetriever(EurekaClinicalProtempaClient inEtlClient) {
 		this.etlClient = inEtlClient;
 	}
 
