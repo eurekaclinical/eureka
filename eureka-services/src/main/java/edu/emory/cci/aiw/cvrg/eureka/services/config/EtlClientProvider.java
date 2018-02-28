@@ -1,10 +1,14 @@
-package edu.emory.cci.aiw.cvrg.eureka.services.comm;
+package edu.emory.cci.aiw.cvrg.eureka.services.config;
 
-/*
+import org.eurekaclinical.protempa.client.EurekaClinicalProtempaClient;
+
+import com.google.inject.Provider;
+
+/*-
  * #%L
- * Eureka Common
+ * Eureka WebApp
  * %%
- * Copyright (C) 2012 - 2014 Emory University
+ * Copyright (C) 2012 - 2017 Emory University
  * %%
  * This program is dual licensed under the Apache 2 and GPLv3 licenses.
  * 
@@ -44,11 +48,17 @@ package edu.emory.cci.aiw.cvrg.eureka.services.comm;
  *
  * @author Andrew Post
  */
-public class EtlI2B2Destination extends EtlDestination {
+public class EtlClientProvider implements Provider<EurekaClinicalProtempaClient> {
 
+	private final String etlUrl;
+
+	public EtlClientProvider(String inEtlUrl) {
+		this.etlUrl = inEtlUrl;
+	}
+	
 	@Override
-	public void accept(EtlDestinationVisitor etlDestinationVisitor) {
-		etlDestinationVisitor.visit(this);
+	public EurekaClinicalProtempaClient get() {
+		return new EurekaClinicalProtempaClient(this.etlUrl);
 	}
 
 }
