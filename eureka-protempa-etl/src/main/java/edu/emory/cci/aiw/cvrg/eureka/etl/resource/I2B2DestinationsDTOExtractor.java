@@ -39,7 +39,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  * <http://www.gnu.org/licenses/gpl-3.0.html>.
  * #L%
  */
-import edu.emory.cci.aiw.cvrg.eureka.etl.comm.EtlI2B2Destination;
+import  org.eurekaclinical.protempa.client.comm.EtlI2B2Destination;
 import org.eurekaclinical.eureka.client.comm.Link;
 import edu.emory.cci.aiw.cvrg.eureka.etl.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.entity.I2B2DestinationEntity;
