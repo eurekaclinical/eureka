@@ -42,6 +42,8 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.test;
 import javax.servlet.Filter;
 import javax.servlet.ServletContextListener;
 
+import org.eurekaclinical.protempa.client.json.ObjectMapperProvider;
+
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Module;
@@ -55,8 +57,6 @@ import com.sun.jersey.test.framework.AppDescriptor;
 import com.sun.jersey.test.framework.JerseyTest;
 import com.sun.jersey.test.framework.WebAppDescriptor;
 import com.sun.jersey.test.framework.WebAppDescriptor.Builder;
-
-import edu.emory.cci.aiw.cvrg.eureka.etl.json.ObjectMapperProvider;
 
 /**
  * Base class for all the Jersey resource related test classes.
