@@ -40,7 +40,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  * #L%
  */
 
-import org.eurekaclinical.protempa.client.comm.EtlNeo4jDestination;
+import edu.emory.cci.aiw.cvrg.eureka.etl.comm.EtlNeo4jDestination;
 import org.eurekaclinical.eureka.client.comm.Link;
 import edu.emory.cci.aiw.cvrg.eureka.etl.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.entity.LinkEntity;

@@ -46,7 +46,7 @@ import com.google.inject.Module;
 import com.google.inject.persist.jpa.JpaPersistModule;
 import com.google.inject.servlet.GuiceServletContextListener;
 
-
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.clients.EtlClientProvider;
 
 import javax.servlet.ServletContext;
 import org.eurekaclinical.common.config.ClientSessionListener;

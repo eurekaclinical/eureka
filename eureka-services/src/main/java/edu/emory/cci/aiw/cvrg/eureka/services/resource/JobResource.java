@@ -47,10 +47,8 @@ import org.eurekaclinical.eureka.client.comm.JobFilter;
 import org.eurekaclinical.eureka.client.comm.JobSpec;
 import org.eurekaclinical.common.comm.clients.ClientException;
 import edu.emory.cci.aiw.cvrg.eureka.services.entity.UserEntity;
-
-import org.eurekaclinical.protempa.client.EurekaClinicalProtempaClient;
-import org.eurekaclinical.protempa.client.comm.JobRequest;
-
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.JobRequest;
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.clients.EtlClient;
 import edu.emory.cci.aiw.cvrg.eureka.services.config.ServiceProperties;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.ConversionSupport;
 import edu.emory.cci.aiw.cvrg.eureka.services.conversion.PropositionDefinitionCollector;
@@ -111,7 +109,7 @@ public class JobResource {
 	 * Protempa proposition definitions.
 	 */
 	private final PropositionDefinitionConverterVisitor converterVisitor;
-	private final EurekaClinicalProtempaClient etlClient;
+	private final EtlClient etlClient;
 	private final ConversionSupport conversionSupport;
 	private final ServiceProperties properties;
 
@@ -130,7 +128,7 @@ public class JobResource {
 	public JobResource(UserDao inUserDao,
 			PropositionDefinitionConverterVisitor inVisitor,
 			PhenotypeEntityDao inPropositionDao,
-			EurekaClinicalProtempaClient inEtlClient,
+			EtlClient inEtlClient,
 			ServiceProperties inProperties) {
 		this.userDao = inUserDao;
 		this.propositionDao = inPropositionDao;
