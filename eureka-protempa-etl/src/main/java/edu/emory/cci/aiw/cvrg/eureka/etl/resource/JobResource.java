@@ -68,7 +68,7 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.authentication.AuthorizedUserSupport;
 
 import org.eurekaclinical.eureka.client.comm.Job;
 import org.eurekaclinical.eureka.client.comm.JobFilter;
-import edu.emory.cci.aiw.cvrg.eureka.etl.comm.JobRequest;
+import org.eurekaclinical.protempa.client.comm.JobRequest;
 import org.eurekaclinical.eureka.client.comm.JobSpec;
 import org.eurekaclinical.eureka.client.comm.SourceConfig;
 import org.eurekaclinical.eureka.client.comm.SourceConfigOption;

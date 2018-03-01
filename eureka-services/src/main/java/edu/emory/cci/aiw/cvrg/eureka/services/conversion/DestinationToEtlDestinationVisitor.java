@@ -55,14 +55,14 @@ import org.eurekaclinical.eureka.client.comm.RelDbDestination;
 import org.eurekaclinical.eureka.client.comm.TableColumn;
 import org.eurekaclinical.eureka.client.comm.TabularFileDestination;
 
-import edu.emory.cci.aiw.cvrg.eureka.services.comm.EtlCohortDestination;
-import edu.emory.cci.aiw.cvrg.eureka.services.comm.EtlDestination;
-import edu.emory.cci.aiw.cvrg.eureka.services.comm.EtlI2B2Destination;
-import edu.emory.cci.aiw.cvrg.eureka.services.comm.EtlNeo4jDestination;
-import edu.emory.cci.aiw.cvrg.eureka.services.comm.EtlPatientSetExtractorDestination;
-import edu.emory.cci.aiw.cvrg.eureka.services.comm.EtlPatientSetSenderDestination;
-import edu.emory.cci.aiw.cvrg.eureka.services.comm.EtlTableColumn;
-import edu.emory.cci.aiw.cvrg.eureka.services.comm.EtlTabularFileDestination;
+import org.eurekaclinical.protempa.client.comm.EtlCohortDestination;
+import org.eurekaclinical.protempa.client.comm.EtlDestination;
+import org.eurekaclinical.protempa.client.comm.EtlI2B2Destination;
+import org.eurekaclinical.protempa.client.comm.EtlNeo4jDestination;
+import org.eurekaclinical.protempa.client.comm.EtlPatientSetExtractorDestination;
+import org.eurekaclinical.protempa.client.comm.EtlPatientSetSenderDestination;
+import org.eurekaclinical.protempa.client.comm.EtlTableColumn;
+import org.eurekaclinical.protempa.client.comm.EtlTabularFileDestination;
 
 /**
  *
