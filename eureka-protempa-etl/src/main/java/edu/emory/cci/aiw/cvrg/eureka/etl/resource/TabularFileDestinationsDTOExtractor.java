@@ -40,8 +40,8 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  * #L%
  */
 
-import  org.eurekaclinical.protempa.client.comm.EtlTableColumn;
-import  org.eurekaclinical.protempa.client.comm.EtlTabularFileDestination;
+import edu.emory.cci.aiw.cvrg.eureka.etl.comm.EtlTableColumn;
+import edu.emory.cci.aiw.cvrg.eureka.etl.comm.EtlTabularFileDestination;
 import edu.emory.cci.aiw.cvrg.eureka.etl.entity.AuthorizedUserEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.entity.TabularFileDestinationEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.entity.TabularFileDestinationTableColumnEntity;

@@ -60,7 +60,7 @@ import org.eurekaclinical.common.config.ServiceServletModule;
 public class BackEndContextListener extends GuiceServletContextListener {
 
 	private static final String JPA_UNIT = "backend-jpa-unit";
-	private static final String PACKAGE_NAMES = "edu.emory.cci.aiw.cvrg.eureka.etl.resource;org.eurekaclinical.protempa.client.json";
+	private static final String PACKAGE_NAMES = "edu.emory.cci.aiw.cvrg.eureka.etl.resource;edu.emory.cci.aiw.cvrg.eureka.etl.json";
 	private final EtlProperties etlProperties = new EtlProperties();
 	private Injector injector;
 

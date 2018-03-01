@@ -48,7 +48,8 @@ import com.google.inject.TypeLiteral;
 import com.google.inject.jndi.JndiIntegration;
 import com.google.inject.servlet.SessionScoped;
 
-import org.eurekaclinical.protempa.client.EurekaClinicalProtempaClient;
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.clients.EtlClient;
+import edu.emory.cci.aiw.cvrg.eureka.services.comm.clients.EtlClientProvider;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.FrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaFrequencyTypeDao;
 import edu.emory.cci.aiw.cvrg.eureka.services.dao.JpaPhenotypeEntityDao;
@@ -105,7 +106,7 @@ class AppModule extends AbstractModule {
 				JndiIntegration.fromJndi(Session.class,
 						"java:comp/env/mail/Session"));
 
-		bind(EurekaClinicalProtempaClient.class).toProvider(this.etlClientProvider).in(SessionScoped.class);
+		bind(EtlClient.class).toProvider(this.etlClientProvider).in(SessionScoped.class);
 	}
 
 }

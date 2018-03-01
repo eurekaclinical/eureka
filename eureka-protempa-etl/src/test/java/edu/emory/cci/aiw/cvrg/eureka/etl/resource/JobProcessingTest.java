@@ -41,7 +41,7 @@ package edu.emory.cci.aiw.cvrg.eureka.etl.resource;
  */
 import com.sun.jersey.api.client.ClientResponse;
 import com.sun.jersey.api.client.GenericType;
-import org.eurekaclinical.protempa.client.comm.JobRequest;
+import edu.emory.cci.aiw.cvrg.eureka.etl.comm.JobRequest;
 import edu.emory.cci.aiw.cvrg.eureka.etl.Constants;
 import edu.emory.cci.aiw.cvrg.eureka.etl.dsb.EurekaDataSourceBackend;
 import java.io.IOException;

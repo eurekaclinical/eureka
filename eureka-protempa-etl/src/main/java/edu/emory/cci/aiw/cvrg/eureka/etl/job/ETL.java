@@ -54,7 +54,7 @@ import org.protempa.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-
+import edu.emory.cci.aiw.cvrg.eureka.etl.comm.EtlDestination;
 import edu.emory.cci.aiw.cvrg.eureka.etl.entity.JobEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.entity.JobEventEntity;
 import edu.emory.cci.aiw.cvrg.eureka.etl.config.EtlProperties;
@@ -67,7 +67,6 @@ import edu.emory.cci.aiw.cvrg.eureka.etl.resource.EtlDestinationToDestinationEnt
 import java.io.IOException;
 import javax.inject.Inject;
 import org.eurekaclinical.eureka.client.comm.JobStatus;
-import org.eurekaclinical.protempa.client.comm.EtlDestination;
 import org.protempa.ProtempaEvent;
 import org.protempa.ProtempaEventListener;
 import org.protempa.backend.Configuration;
