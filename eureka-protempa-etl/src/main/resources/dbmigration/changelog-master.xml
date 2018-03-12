@@ -1,0 +1,940 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  #%L
+  Eureka Protempa ETL
+  %%
+  Copyright (C) 2012 - 2013 Emory University
+  %%
+  This program is dual licensed under the Apache 2 and GPLv3 licenses.
+  
+  Apache License, Version 2.0:
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  
+  GNU General Public License version 3:
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as
+  published by the Free Software Foundation, either version 3 of the
+  License, or (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public
+  License along with this program.  If not, see
+  <http://www.gnu.org/licenses/gpl-3.0.html>.
+  #L%
+-->
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+				   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+				   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.3.xsd" logicalFilePath="changelog-master.xml">
+	
+	<property name="eureka.superuser.username" value="superuser"/>
+	
+	<changeSet author="arpost (generated)" id="1361552652236-2">
+		<createTable tableName="JOB_EVENTS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C0012512"/>
+			</column>
+			<column name="EXCEPTIONSTACKTRACE" type="CLOB"/>
+			<column name="MESSAGE" type="VARCHAR(255)"/>
+			<column name="STATE" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="TIMESTAMP" type="TIMESTAMP(6)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="JOB_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1361552652236-3">
+		<createTable tableName="JOBS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SYS_C007777"/>
+			</column>
+			<column name="CONFIGURATIONID" type="BIGINT"/>
+			<column name="TIMESTAMP" type="TIMESTAMP(6)"/>
+			<column name="USERID" type="BIGINT"/>
+		</createTable>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1361552652236-4">
+		<addForeignKeyConstraint baseColumnNames="JOB_ID" baseTableName="JOB_EVENTS" constraintName="FK88C003DB45BC207" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="JOBS" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1361552652236-5">
+		<createSequence sequenceName="CONFIG_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1361552652236-6">
+		<createSequence sequenceName="JOBEVENT_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1361552652236-7">
+		<createSequence sequenceName="JOB_SEQ"/> 
+	</changeSet> 
+	<!-- 1.7 changes -->
+	<!-- WARNING: THE JOBS AND JOB_EVENTS TABLES WILL BE CLEARED OUT AS A RESULT OF
+	THIS CHANGELOG! -->
+	<changeSet author="arpost (generated)" id="1361552652236-8">
+		<delete tableName="JOB_EVENTS"/>
+		<delete tableName="JOBS"/>
+		<renameColumn tableName="JOBS" oldColumnName="USERID" newColumnName="USER_ID"/>
+		<addColumn tableName="JOBS">
+			<column name="DESTINATIONID" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+		</addColumn>
+		<modifyDataType tableName="JOBS" columnName="CONFIGURATIONID" newDataType="VARCHAR(255)"/>
+		<renameColumn tableName="JOBS" oldColumnName="CONFIGURATIONID" newColumnName="SOURCECONFIGID"/>
+		<renameColumn tableName="JOBS" oldColumnName="TIMESTAMP" newColumnName="CREATED"/>
+		<!--   <addNotNullConstraint tableName="JOBS" columnName="SOURCECONFIGID"/> --> 
+		<modifyDataType tableName="JOB_EVENTS" columnName="STATE" newDataType="INT"/>
+		<addColumn tableName="JOB_EVENTS">
+			<column name="MESSAGE2" type="CLOB"/>
+		</addColumn>
+		<dropColumn tableName="JOB_EVENTS" columnName="MESSAGE"/>
+		<renameColumn tableName="JOB_EVENTS" oldColumnName="MESSAGE2" newColumnName="MESSAGE"/>
+		<createTable tableName="USERS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="USERS_PK"/>
+			</column>
+			<column name="USERNAME" type="VARCHAR(255)">
+				<constraints  nullable="false"/>
+			</column>
+		</createTable>
+		<insert tableName="USERS">
+			<column name="ID" valueNumeric="1"/>
+			<column name="USERNAME" value="${eureka.superuser.username}"/>
+		</insert>
+		<addForeignKeyConstraint baseColumnNames="USER_ID" baseTableName="JOBS" constraintName="JOBS_USER_ID_CONSTRAINT" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="USERS" referencesUniqueColumn="false"/>
+		<createSequence sequenceName="USER_SEQ" startValue="2"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1361552652236-9">
+		<createTable tableName="DESTINATIONS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="DEST_PK"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)">
+				<constraints nullable="false" unique="true"/>
+			</column>
+			<column name="OWNER_ID" type="BIGINT"/>
+		</createTable>
+		<createTable tableName="DESTINATIONS_GROUPS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="DEST_GRP_PK"/>
+			</column>
+			<column name="GROUPEXECUTE" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="GROUPREAD" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="GROUPWRITE" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="DESTINATIONS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="GROUPS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<createTable tableName="GROUPS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="GROUPS_PK"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)"/>
+		</createTable>
+		<createTable tableName="SOURCECONFIGS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SC_PK"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)">
+				<constraints nullable="false" unique="true"/>
+			</column>
+			<column name="OWNER_ID" type="BIGINT"/>
+		</createTable>
+		<createTable tableName="SOURCECONFIGS_GROUPS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="SC_GRP_PK"/>
+			</column>
+			<column name="GROUPEXECUTE" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="GROUPREAD" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="GROUPWRITE" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="GROUPS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="SOURCECONFIGS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<createTable tableName="USERS_DESTINATIONS">
+			<column name="USERS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="DESTINATIONS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<createTable tableName="USERS_GROUPS">
+			<column name="USERS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="GROUPS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<createTable tableName="USERS_SOURCECONFIGS">
+			<column name="USERS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="SOURCECONFIGS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addUniqueConstraint columnNames="DESTINATIONS_ID, GROUPS_ID" constraintName="SYS_C0033774" deferrable="false" disabled="false" initiallyDeferred="false" tableName="DESTINATIONS_GROUPS"/>
+		<addUniqueConstraint columnNames="SOURCECONFIGS_ID, GROUPS_ID" constraintName="SYS_C0033796" deferrable="false" disabled="false" initiallyDeferred="false" tableName="SOURCECONFIGS_GROUPS"/>
+		<addUniqueConstraint columnNames="DESTINATIONS_ID" constraintName="SYS_C0033803" deferrable="false" disabled="false" initiallyDeferred="false" tableName="USERS_DESTINATIONS" />
+		<addUniqueConstraint columnNames="SOURCECONFIGS_ID" constraintName="SYS_C0033808" deferrable="false" disabled="false" initiallyDeferred="false" tableName="USERS_SOURCECONFIGS" />
+		<addForeignKeyConstraint baseColumnNames="OWNER_ID" baseTableName="DESTINATIONS" constraintName="FKAE023E25E287381C" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="USERS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="DESTINATIONS_ID" baseTableName="DESTINATIONS_GROUPS" constraintName="FKCFD5552E245A59B3" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="DESTINATIONS_ID" baseTableName="DESTINATIONS_GROUPS" constraintName="FKCFD5552E387530A" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="GROUPS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="GROUPS_ID" baseTableName="DESTINATIONS_GROUPS" constraintName="FKCFD5552E143164FB" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="GROUPS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="OWNER_ID" baseTableName="SOURCECONFIGS" constraintName="FKDB1B38F6E287381C" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="USERS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="GROUPS_ID" baseTableName="SOURCECONFIGS_GROUPS" constraintName="FKEC64BD3D143164FB" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="GROUPS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="SOURCECONFIGS_ID" baseTableName="SOURCECONFIGS_GROUPS" constraintName="FKEC64BD3D48666577" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="SOURCECONFIGS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="DESTINATIONS_ID" baseTableName="USERS_DESTINATIONS" constraintName="FKBC8026FC245A59B3" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="USERS_ID" baseTableName="USERS_DESTINATIONS" constraintName="FKBC8026FC6F9160A7" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="USERS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="GROUPS_ID" baseTableName="USERS_GROUPS" constraintName="FKD034EFEB143164FB" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="GROUPS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="USERS_ID" baseTableName="USERS_GROUPS" constraintName="FKD034EFEB6F9160A7" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="USERS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="SOURCECONFIGS_ID" baseTableName="USERS_SOURCECONFIGS" constraintName="FK9C5A6AFF48666577" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="SOURCECONFIGS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="USERS_ID" baseTableName="USERS_SOURCECONFIGS" constraintName="FK9C5A6AFF6F9160A7" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="USERS" referencesUniqueColumn="false"/>
+		<createSequence sequenceName="DEST_GRP_SEQ"/>
+		<createSequence sequenceName="DEST_SEQ"/>
+		<createSequence sequenceName="GROUPS_SEQ"/>
+		<createSequence sequenceName="SC_GRP_SEQ"/>
+		<createSequence sequenceName="SOURCECONFIG_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1361552652236-10">
+		<addUniqueConstraint tableName="USERS" columnNames="USERNAME"/>
+	</changeSet>
+	<!-- 1.10 changes -->
+	<changeSet author="arpost (generated)" id="1361552652236-11">
+		<addColumn tableName="DESTINATIONS">
+			<column name="DESCRIPTION" type="CLOB"/>
+		</addColumn>
+		<addColumn tableName="DESTINATIONS">
+			<column name="CREATED_AT" type="TIMESTAMP(6)"/>
+		</addColumn>
+		<addColumn tableName="DESTINATIONS">
+			<column name="UPDATED_AT" type="TIMESTAMP(6)"/>
+		</addColumn>
+		<createTable tableName="NODES">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="NODE_PK"/>
+			</column>
+		</createTable>
+		<createTable tableName="UNARY_OPERATORS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="UNARYOP_PK"/>
+			</column>
+			<column name="OP" type="VARCHAR(3)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="NODE_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="NODE_ID" baseTableName="UNARY_OPERATORS" constraintName="FK_UNARY_OPS_NODE_ID" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="NODES" referencesUniqueColumn="false"/>
+		<createTable tableName="BINARY_OPERATORS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="BINARYOP_PK"/>
+			</column>
+			<column name="OP" type="VARCHAR(3)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="LEFTNODE_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="RIGHTNODE_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="LEFTNODE_ID" baseTableName="BINARY_OPERATORS" constraintName="FK_BINARY_OPS_LEFTNODE_ID" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="NODES" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="RIGHTNODE_ID" baseTableName="BINARY_OPERATORS" constraintName="FK_BINARY_OPS_RIGHTNODE_ID" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="NODES" referencesUniqueColumn="false"/>
+		<createTable tableName="LITERALS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="LITERAL_PK"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="START_DT" type="TIMESTAMP(6)"/>
+			<column name="FINISH_DT" type="TIMESTAMP(6)"/>
+		</createTable>
+		<createTable tableName="COHORTS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="COHORT_PK"/>
+			</column>
+			<column name="NODE_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="NODE_ID" baseTableName="COHORTS" constraintName="FK_COHORT_NODE_ID" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="NODES" referencesUniqueColumn="false"/>
+		<createTable tableName="COHORT_DESTINATIONS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="COHORT_DEST_PK"/>
+			</column>
+			<column name="COHORT_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="COHORT_ID" baseTableName="COHORT_DESTINATIONS" constraintName="FK_COHORT_DEST_COHORT_ID" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="COHORTS" referencesUniqueColumn="false"/>
+		<createTable tableName="I2B2_DESTINATIONS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="I2B2_DEST_PK"/>
+			</column>
+		</createTable>
+		<createSequence sequenceName="COHORT_SEQ"/>
+		<createSequence sequenceName="NODE_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1361552652236-12">
+		<sql>
+			INSERT INTO I2B2_DESTINATIONS (SELECT ID FROM DESTINATIONS)
+		</sql>
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="I2B2_DESTINATIONS" constraintName="FK_I2B2_DEST" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="COHORT_DESTINATIONS" constraintName="FK_COHORT_DEST" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost (generated)" id="1361552652236-13">
+		<dropForeignKeyConstraint baseTableName="DESTINATIONS_GROUPS" constraintName="FKCFD5552E387530A"/>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-14">
+		<addColumn tableName="DESTINATIONS">
+			<column name="EFFECTIVE_AT" type="TIMESTAMP(6)"/>
+		</addColumn>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-15">
+		<addColumn tableName="DESTINATIONS">
+			<column name="EXPIRED_AT" type="TIMESTAMP(6)"/>
+		</addColumn>
+	</changeSet>
+	<!-- Drops unique constraint -->
+	<changeSet author="arpost" id="1361552652236-16">
+		<addColumn tableName="DESTINATIONS">
+			<column name="TEMPNAME" type="VARCHAR(255)"/>
+		</addColumn>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-17">
+		<sql>
+			UPDATE DESTINATIONS SET TEMPNAME=NAME
+		</sql>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-18">
+		<dropColumn tableName="DESTINATIONS" columnName="NAME"/>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-19">
+		<addNotNullConstraint tableName="DESTINATIONS" columnName="TEMPNAME" columnDataType="VARCHAR(255)"/>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-20">
+		<renameColumn tableName="DESTINATIONS" oldColumnName="TEMPNAME" newColumnName="NAME"/>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-21">
+		<sql>
+			UPDATE DESTINATIONS SET EFFECTIVE_AT=CREATED_AT
+		</sql>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-22">
+		<addColumn tableName="JOBS">
+			<column name="DESTINATION_ID" type="BIGINT"/>
+		</addColumn>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-23">
+		<sql>
+			UPDATE JOBS J SET DESTINATION_ID=(SELECT ID FROM DESTINATIONS D WHERE D.NAME=J.DESTINATIONID)
+		</sql>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-24">
+		<delete tableName="JOB_EVENTS">
+			<where>JOB_ID IN (SELECT ID FROM JOBS WHERE DESTINATION_ID IS NULL)</where>
+		</delete>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-25">
+		<delete tableName="JOBS">
+			<where>DESTINATION_ID IS NULL</where>
+		</delete>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-26">
+		<addForeignKeyConstraint baseColumnNames="DESTINATION_ID" baseTableName="JOBS" constraintName="FK_JOB_DEST" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-27">
+		<dropColumn tableName="JOBS" columnName="DESTINATIONID"/>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-28">
+		<createTable tableName="I2B2_DEST_IVAL_SIDES">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="I2B2_DEST_IVAL_SIDE_PK"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)">
+				<constraints nullable="false" unique="true"/>
+			</column>
+			<column name="DESCRIPTION" type="VARCHAR(255)"/>
+			<column name="ISDEFAULT" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="RANK" type="INT">
+				<constraints nullable="false" unique="true"/>
+			</column>
+		</createTable>
+		<insert tableName="I2B2_DEST_IVAL_SIDES">
+			<column name="ID" valueNumeric="1"/>
+			<column name="NAME" value="START"/>
+			<column name="DESCRIPTION" value="The start or left-hand-side of the interval"/>
+			<column name="ISDEFAULT" valueBoolean="true"/>
+			<column name="RANK" valueNumeric="1"/>
+		</insert>
+		<insert tableName="I2B2_DEST_IVAL_SIDES">
+			<column name="ID" valueNumeric="2"/>
+			<column name="NAME" value="FINISH"/>
+			<column name="DESCRIPTION" value="The finish or right-hand-side of the interval"/>
+			<column name="ISDEFAULT" valueBoolean="false"/>
+			<column name="RANK" valueNumeric="2"/>
+		</insert>
+		<createSequence sequenceName="I2B2_IS_SEQ" startValue="3"/>
+		
+		<createTable tableName="I2B2_DEST_REMOVE_METHODS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="I2B2_DEST_REMOVE_METHOD_PK"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)">
+				<constraints nullable="false" unique="true"/>
+			</column>
+			<column name="DESCRIPTION" type="VARCHAR(255)"/>
+			<column name="ISDEFAULT" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="RANK" type="INT">
+				<constraints nullable="false" unique="true"/>
+			</column>
+		</createTable>
+		<insert tableName="I2B2_DEST_REMOVE_METHODS">
+			<column name="ID" valueNumeric="1"/>
+			<column name="NAME" value="TRUNCATE"/>
+			<column name="DESCRIPTION" value="Truncate tables"/>
+			<column name="ISDEFAULT" valueBoolean="true"/>
+			<column name="RANK" valueNumeric="1"/>
+		</insert>
+		<insert tableName="I2B2_DEST_REMOVE_METHODS">
+			<column name="ID" valueNumeric="2"/>
+			<column name="NAME" value="DELETE"/>
+			<column name="DESCRIPTION" value="Delete records from the same data source"/>
+			<column name="ISDEFAULT" valueBoolean="false"/>
+			<column name="RANK" valueNumeric="2"/>
+		</insert>
+		<createSequence sequenceName="I2B2_DR_SEQ" startValue="3"/>
+		
+		<createTable tableName="I2B2_DEST_VALUE_TYPE_CDS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="I2B2_DEST_VALUE_TYPE_CD_PK"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)">
+				<constraints nullable="false" unique="true"/>
+			</column>
+			<column name="DESCRIPTION" type="VARCHAR(255)"/>
+			<column name="ISDEFAULT" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="RANK" type="INT">
+				<constraints nullable="false" unique="true"/>
+			</column>
+		</createTable>
+		<insert tableName="I2B2_DEST_VALUE_TYPE_CDS">
+			<column name="ID" valueNumeric="1"/>
+			<column name="NAME" value="LABORATORY_TESTS"/>
+			<column name="DESCRIPTION" value="Numerically valued data"/>
+			<column name="ISDEFAULT" valueBoolean="false"/>
+			<column name="RANK" valueNumeric="1"/>
+		</insert>
+		<insert tableName="I2B2_DEST_VALUE_TYPE_CDS">
+			<column name="ID" valueNumeric="2"/>
+			<column name="NAME" value="DOCUMENTS"/>
+			<column name="DESCRIPTION" value="Documents"/>
+			<column name="ISDEFAULT" valueBoolean="false"/>
+			<column name="RANK" valueNumeric="2"/>
+		</insert>
+		<insert tableName="I2B2_DEST_VALUE_TYPE_CDS">
+			<column name="ID" valueNumeric="3"/>
+			<column name="NAME" value="UNSPECIFIED"/>
+			<column name="DESCRIPTION" value="Unspecified"/>
+			<column name="ISDEFAULT" valueBoolean="true"/>
+			<column name="RANK" valueNumeric="3"/>
+		</insert>
+		<createSequence sequenceName="I2B2_VTC_SEQ" startValue="4"/>
+		
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PROVIDERFULLNAME" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PROVIDERFIRSTNAME" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PROVIDERMIDDLENAME" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PROVIDERLASTNAME" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="VISITDIMENSION" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="SKIPPROVIDERHIERARCHY" type="BOOLEAN"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="SKIPDEMOGRAPHICSHIERARCHY" type="BOOLEAN"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="DATAREMOVEMETHOD_ID" type="BIGINT"/>
+		</addColumn>
+		<addForeignKeyConstraint baseColumnNames="DATAREMOVEMETHOD_ID" baseTableName="I2B2_DESTINATIONS" constraintName="FK_I2B2_DEST_DATA_RM" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="I2B2_DEST_REMOVE_METHODS" referencesUniqueColumn="true"/>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="METAREMOVEMETHOD_ID" type="BIGINT"/>
+		</addColumn>
+		<addForeignKeyConstraint baseColumnNames="METAREMOVEMETHOD_ID" baseTableName="I2B2_DESTINATIONS" constraintName="FK_I2B2_DEST_META_RM" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="I2B2_DEST_REMOVE_METHODS" referencesUniqueColumn="true"/>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="SOURCESYSTEMCODE" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PATIENTDIMENSIONMRN" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PATIENTDIMENSIONVITAL" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PATIENTDIMENSIONRELIGION" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PATIENTDIMENSIONLANGUAGE" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PATIENTDIMENSIONGENDER" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PATIENTDIMENSIONBIRTHDATE" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PATIENTDIMENSIONZIPCODE" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PATIENTDIMENSIONMARITALSTATUS" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PATIENTDIMENSIONRACE" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="ROOTNODENAME" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="VISITDIMENSIONID" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="VISITDIMENSIONINOUT" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="AGECONCEPTCODEPREFIX" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="METATABLENAME" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="METACONNECT" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="METAUSER" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="METAPASSWORD" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="DATACONNECT" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="DATAUSER" type="VARCHAR(255)"/>
+		</addColumn>
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="DATAPASSWORD" type="VARCHAR(255)"/>
+		</addColumn>
+		<createTable tableName="I2B2_DEST_CONCEPTSPECS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="I2B2_DEST_CONCEPTSPEC_PK"/>
+			</column>
+			<column name="I2B2DESTINATIONS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="PROPOSITION" type="VARCHAR(255)"/>
+			<column name="PROPERTY" type="VARCHAR(255)"/>
+			<column name="REFERENCE" type="VARCHAR(255)"/>
+			<column name="I2B2DESTVALUETYPECDS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="ALREADYLOADED" type="BOOLEAN" defaultValueBoolean="false">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="I2B2DESTINATIONS_ID" baseTableName="I2B2_DEST_CONCEPTSPECS" constraintName="FK_I2B2_DEST_CONCEPTSPEC" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="I2B2_DESTINATIONS" referencesUniqueColumn="true"/>
+		<addForeignKeyConstraint baseTableName="I2B2_DEST_CONCEPTSPECS" baseColumnNames="I2B2DESTVALUETYPECDS_ID" constraintName="FK_I2B2_CONCEPTS_VTC" referencedTableName="I2B2_DEST_VALUE_TYPE_CDS" referencedColumnNames="ID" referencesUniqueColumn="true"/>
+		<createSequence sequenceName="I2B2_CS_SEQ"/>
+		
+		<createTable tableName="I2B2_DEST_DATASPECS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="I2B2_DEST_DATASPEC_PK"/>
+			</column>
+			<column name="I2B2DESTINATIONS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="PROPERTY" type="VARCHAR(255)"/>
+			<column name="REFERENCE" type="VARCHAR(255)"/>
+			<column name="CONCEPTCODEPREFIX" type="VARCHAR(255)"/>
+			<column name="START_ID" type="BIGINT"/>
+			<column name="FINISH_ID" type="BIGINT"/>
+			<column name="UNITS" type="VARCHAR(255)"/>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="I2B2DESTINATIONS_ID" baseTableName="I2B2_DEST_DATASPECS" constraintName="FK_I2B2_DEST_DATASPEC" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="I2B2_DESTINATIONS" referencesUniqueColumn="true"/>
+		<addForeignKeyConstraint baseTableName="I2B2_DEST_DATASPECS" baseColumnNames="START_ID" constraintName="FK_I2B2_DEST_DATA_START" referencedTableName="I2B2_DEST_IVAL_SIDES" referencedColumnNames="ID" referencesUniqueColumn="true"/>
+		<addForeignKeyConstraint baseTableName="I2B2_DEST_DATASPECS" baseColumnNames="FINISH_ID" constraintName="FK_I2B2_DEST_DATA_FINISH" referencedTableName="I2B2_DEST_IVAL_SIDES" referencedColumnNames="ID" referencesUniqueColumn="true"/>
+		<createSequence sequenceName="I2B2_DS_SEQ"/>
+		
+		<createTable tableName="I2B2_DEST_MODIFIERSPECS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="I2B2_DEST_MODIFIERSPEC_PK"/>
+			</column>
+			<column name="I2B2DESTCONCEPTSPECS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="CODEPREFIX" type="VARCHAR(255)"/>
+			<column name="PROPERTY" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="VAL" type="VARCHAR(255)"/>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="I2B2DESTCONCEPTSPECS_ID" baseTableName="I2B2_DEST_MODIFIERSPECS" constraintName="FK_I2B2_DEST_MODIFIERSPEC" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="I2B2_DEST_CONCEPTSPECS" referencesUniqueColumn="true"/>
+		<createSequence sequenceName="I2B2_MS_SEQ"/>
+		
+		<addUniqueConstraint tableName="I2B2_DEST_DATASPECS" columnNames="NAME, I2B2DESTINATIONS_ID"/>
+		<addUniqueConstraint tableName="I2B2_DEST_CONCEPTSPECS" columnNames="PROPOSITION, PROPERTY, REFERENCE, I2B2DESTINATIONS_ID"/>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-29">
+		<createTable tableName="NEO4J_DESTINATIONS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="NEO4J_DEST_PK"/>
+			</column>
+			<column name="DBHOME" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="NEO4J_DESTINATIONS" constraintName="FK_NEO4J_DEST" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-30">
+		<createTable tableName="DEST_LINKS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="DEST_LINK_PK"/>
+			</column>
+			<column name="DESTINATIONS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="URL" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="DISPLAYNAME" type="VARCHAR(255)"/>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="DESTINATIONS_ID" baseTableName="DEST_LINKS" constraintName="FK_DEST_LINKS" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="true"/>
+		<createSequence sequenceName="DEST_LINK_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-31">
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="PATIENTDIMENSIONDEATHDATE" type="VARCHAR(255)"/>
+		</addColumn>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-32">
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="MERGEONUPDATE" type="BOOLEAN"/>
+		</addColumn>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-33">
+		<createTable tableName="PS_EXTRACTOR_DESTINATIONS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="PS_EXTRACTOR_DEST_PK"/>
+			</column>
+			<column name="ALIASPROPOSITIONID" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="ALIASFIELDNAMEPROPERTY" type="VARCHAR(255)"/>
+			<column name="ALIASFIELDNAME" type="VARCHAR(255)"/>
+			<column name="ALIASPATIENTIDPROPERTY" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="PS_EXTRACTOR_DESTINATIONS" constraintName="FK_PS_EXTRACTOR_DEST" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-34">
+		<addColumn tableName="I2B2_DESTINATIONS">
+			<column name="MANAGECTOTALNUM" type="BOOLEAN" defaultValueBoolean="false">
+				<constraints nullable="false"/>
+			</column>
+		</addColumn>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-35">
+		<createTable tableName="ENCRYPTION_ALGORITHMS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="ENCRYPTION_ALGORITHMS_PK"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)">
+				<constraints nullable="false" unique="true" uniqueConstraintName="ENCRYPTION_ALGORITHMS_UNIQ"/>
+			</column>
+			<column name="DESCRIPTION" type="VARCHAR(255)"/>
+			<column name="ISDEFAULT" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="RANK" type="INT">
+				<constraints nullable="false" unique="true"/>
+			</column>
+		</createTable>
+		<createTable tableName="EA_CIPHERS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="EA_CIPHERS_PK"/>
+			</column>
+			<column name="CIPHERALGORITHM" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="KEYALGORITHM" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="EA_CIPHERS" constraintName="FK_EA_CIPHERS" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="ENCRYPTION_ALGORITHMS" referencesUniqueColumn="true"/>
+		<createTable tableName="EA_MESSAGE_DIGESTS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="EA_MESSAGE_DIGESTS_PK"/>
+			</column>
+			<column name="ALGORITHM" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="EA_MESSAGE_DIGESTS" constraintName="FK_EA_MESSAGE_DIGESTS" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="ENCRYPTION_ALGORITHMS" referencesUniqueColumn="true"/>
+		<insert tableName="ENCRYPTION_ALGORITHMS">
+			<column name="ID" valueNumeric="1"/>
+			<column name="NAME" value="MD5"/>
+			<column name="DESCRIPTION" value="A cryptographic hash function producing a 16-byte hash value"/>
+			<column name="ISDEFAULT" valueBoolean="true"/>
+			<column name="RANK" valueNumeric="1"/>
+		</insert>
+		<insert tableName="EA_MESSAGE_DIGESTS">
+			<column name="ID" valueNumeric="1"/>
+			<column name="ALGORITHM" value="MD5"/>
+		</insert>
+		<insert tableName="ENCRYPTION_ALGORITHMS">
+			<column name="ID" valueNumeric="2"/>
+			<column name="NAME" value="DES/ECB/PKCS5Padding with AES key"/>
+			<column name="DESCRIPTION" value="A cryptographic cipher for encryption and decryption, requires a 128 bit keysize"/>
+			<column name="ISDEFAULT" valueBoolean="false"/>
+			<column name="RANK" valueNumeric="2"/>
+		</insert>
+		<insert tableName="EA_CIPHERS">
+			<column name="ID" valueNumeric="2"/>
+			<column name="CIPHERALGORITHM" value="DES/ECB/PKCS5Padding"/>
+			<column name="KEYALGORITHM" value="AES"/>
+		</insert>
+		<addColumn tableName="DESTINATIONS">
+			<column name="KEYALGORITHM" type="VARCHAR(255)"/>
+			<column name="DEIDENTIFICATIONENABLED" type="BOOLEAN" defaultValueBoolean="false">
+				<constraints nullable="false"/>
+			</column>
+			<column name="ENCRYPTIONALGORITHM_ID" type="BIGINT"/>
+		</addColumn>
+		<addForeignKeyConstraint baseColumnNames="ENCRYPTIONALGORITHM_ID" baseTableName="DESTINATIONS" constraintName="FK_ENCRYPTION_ALGORITHMS" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="ENCRYPTION_ALGORITHMS" referencesUniqueColumn="true"/>
+		<createTable tableName="DEID_PER_PATIENT_PARAMS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="PS_DEST_OFFSETS_PK"/>
+			</column>
+			<column name="DESTINATIONS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="KEYID" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="SALT" type="VARCHAR(255)"/>
+			<column name="DTOFFSET" type="INT"/>
+			<column name="CIPHERKEY" type="VARCHAR(255)"/>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="DESTINATIONS_ID" baseTableName="DEID_PER_PATIENT_PARAMS" constraintName="FK_DEID_PER_PATIENT_PARAMS" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="true"/>
+		<createSequence sequenceName="DEID_PER_PT_PARAMS_SEQ"/>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-35b">
+		<update tableName="JOB_EVENTS">
+			<column name="STATE" type="INT" valueComputed="STATE+1"/>
+		</update>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-36">
+		<addColumn tableName="DESTINATIONS">
+			<column name="OUTPUTNAME" type="VARCHAR(255)"/>
+			<column name="OUTPUTTYPE" type="VARCHAR(255)" defaultValue="application/octet-stream"/>
+		</addColumn>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-37">
+		<addColumn tableName="JOBS">
+			<column name="NAME" type="VARCHAR(255)"/>
+		</addColumn>
+	</changeSet>
+	<changeSet author="akalsan" id="1361552652236-38">
+		<addColumn tableName="JOBS">
+			<column name="FINISHED" type="TIMESTAMP(6)"/>
+		</addColumn>
+	</changeSet>
+	<changeSet author="akalsan" id="1361552652236-39">
+		<sql>
+			UPDATE JOBS J SET FINISHED=(SELECT MAX(TIMESTAMP) FROM JOB_EVENTS E WHERE J.ID=E.JOB_ID)
+		</sql>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-40">
+		<comment>The researcher and admin roles cannot be deleted, or subsequent changeSets may fail.</comment>
+		<createTable tableName="ROLES">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="ROLES_PK"/>
+			</column>
+			<column name="DEFAULTROLE" type="BOOLEAN">
+				<constraints nullable="false"/>
+			</column>
+			<column name="NAME" type="VARCHAR(255)">
+				<constraints nullable="false" unique="true" uniqueConstraintName="ROLES_NAME_UNIQ"/>
+			</column>
+		</createTable>
+		<createSequence sequenceName="ROLE_SEQ"/>
+		<createTable tableName="USERS_ROLES">
+			<column name="USER_ID" type="BIGINT">
+				<constraints nullable="false" foreignKeyName="ROLES_USER_FK" referencedTableName="USERS" referencedColumnNames="ID"/>
+			</column>
+			<column name="ROLE_ID" type="BIGINT">
+				<constraints nullable="false" foreignKeyName="ROLES_ROLE_FK" referencedTableName="ROLES" referencedColumnNames="ID"/>
+			</column>
+		</createTable>
+		<insert tableName="ROLES">
+			<column name="ID" valueSequenceNext="ROLE_SEQ"/>
+			<column name="NAME" value="researcher"/>
+			<column name="DEFAULTROLE" valueBoolean="true"/>
+		</insert>
+		<insert tableName="ROLES">
+			<column name="ID" valueSequenceNext="ROLE_SEQ"/>
+			<column name="NAME" value="admin"/>
+			<column name="DEFAULTROLE" valueBoolean="false"/>
+		</insert>
+		<rollback>
+			<delete tableName="ROLES"/>
+		</rollback>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-41">
+		<preConditions onFail="MARK_RAN">
+			<sqlCheck expectedResult="1">SELECT COUNT(*) FROM USERS WHERE USERNAME='${eureka.superuser.username}'</sqlCheck>
+		</preConditions>
+		<comment>This changeSet only runs if the original superuser account is still present.</comment>
+		<insert tableName="USERS_ROLES">
+			<column name="USER_ID" valueComputed="(SELECT ID FROM USERS WHERE USERNAME='${eureka.superuser.username}')"/>
+			<column name="ROLE_ID" valueComputed="(SELECT ID FROM ROLES WHERE NAME='researcher')"/>
+		</insert>
+		<insert tableName="USERS_ROLES">
+			<column name="USER_ID" valueComputed="(SELECT ID FROM USERS WHERE USERNAME='${eureka.superuser.username}')"/>
+			<column name="ROLE_ID" valueComputed="(SELECT ID FROM ROLES WHERE NAME='admin')"/>
+		</insert>
+		<rollback>
+			<delete tableName="USERS_ROLES">
+				<whereParams>
+					<param name="USER_ID" valueComputed="(SELECT ID FROM USERS WHERE USERNAME='${eureka.superuser.username}')"/>
+					<param name="ROLE_ID" valueComputed="(SELECT ID FROM ROLES WHERE NAME='researcher')"/>
+				</whereParams>
+			</delete>
+			<delete tableName="USERS_ROLES">
+				<whereParams>
+					<param name="USER_ID" valueComputed="(SELECT ID FROM USERS WHERE USERNAME='${eureka.superuser.username}')"/>
+					<param name="ROLE_ID" valueComputed="(SELECT ID FROM ROLES WHERE NAME='admin')"/>
+				</whereParams>
+			</delete>
+		</rollback>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-42">
+		<createTable tableName="PS_SENDER_DESTINATIONS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="PS_SENDER_DEST_PK"/>
+			</column>
+			<column name="ALIASPROPOSITIONID" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="ALIASFIELDNAMEPROPERTY" type="VARCHAR(255)"/>
+			<column name="ALIASFIELDNAME" type="VARCHAR(255)"/>
+			<column name="ALIASPATIENTIDPROPERTY" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="PATIENTSETSERVICE" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="PS_SENDER_DESTINATIONS" constraintName="FK_PS_SENDER_DEST" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-43">
+		<createTable tableName="TABULAR_FILE_DESTINATIONS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="TF_DEST_PK"/>
+			</column>
+		</createTable>
+		<addForeignKeyConstraint baseColumnNames="ID" baseTableName="TABULAR_FILE_DESTINATIONS" constraintName="FK_TF_DEST" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="DESTINATIONS" referencesUniqueColumn="false"/>
+		<createTable tableName="TF_DEST_TABLECOLUMNS">
+			<column name="ID" type="BIGINT">
+				<constraints nullable="false" primaryKey="true" primaryKeyName="TF_DEST_TC_PK"/>
+			</column>
+			<column name="TABULARFILEDESTINATIONS_ID" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="TABLENAME" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="COLUMNNAME" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="RANK" type="BIGINT">
+				<constraints nullable="false"/>
+			</column>
+			<column name="PATH" type="VARCHAR(255)">
+				<constraints nullable="false"/>
+			</column>
+			<column name="FORMAT" type="VARCHAR(255)"/>
+		</createTable>
+		<createSequence sequenceName="TF_DEST_TC_SEQ"/>
+		<addForeignKeyConstraint baseColumnNames="TABULARFILEDESTINATIONS_ID" baseTableName="TF_DEST_TABLECOLUMNS" constraintName="FK_TF_DEST_TC" deferrable="false" initiallyDeferred="false" onDelete="RESTRICT" referencedColumnNames="ID" referencedTableName="TABULAR_FILE_DESTINATIONS" referencesUniqueColumn="false"/>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-44">
+		<addUniqueConstraint tableName="DESTINATIONS" columnNames="NAME, EXPIRED_AT" constraintName="UNIQ_DEST_NAME_EXP"/>
+	</changeSet>
+	<changeSet author="arpost" id="1361552652236-45">
+		<dropColumn tableName="DESTINATIONS" columnName="UPDATED_AT"/>
+	</changeSet>
+</databaseChangeLog>

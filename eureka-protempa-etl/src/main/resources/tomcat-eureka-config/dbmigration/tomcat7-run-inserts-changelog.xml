@@ -1,0 +1,256 @@
+<!--
+  #%L
+  Eureka Protempa ETL
+  %%
+  Copyright (C) 2012 - 2015 Emory University
+  %%
+  This program is dual licensed under the Apache 2 and GPLv3 licenses.
+  
+  Apache License, Version 2.0:
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  
+  GNU General Public License version 3:
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as
+  published by the Free Software Foundation, either version 3 of the
+  License, or (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public
+  License along with this program.  If not, see
+  <http://www.gnu.org/licenses/gpl-3.0.html>.
+  #L%
+  -->
+<databaseChangeLog
+  xmlns="http://www.liquibase.org/xml/ns/dbchangelog" 
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.0.xsd">
+    <changeSet author="arpost" id="1">
+		<insert tableName="DESTINATIONS">
+			<column name="ID" valueSequenceNext="DEST_SEQ"/>
+			<column name="OWNER_ID" value="1"/>
+			<column name="CREATED_AT" valueDate="2015-05-04T17:27:00"/>
+			<column name="EFFECTIVE_AT" valueDate="2015-05-04T17:27:00"/>
+			<column name="NAME" value="Load into i2b2 on localhost with Eureka ontology"/>
+		</insert>
+		<insert tableName="I2B2_DESTINATIONS">
+			<column name="ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="PROVIDERFULLNAME" value="providerFullName"/>
+			<column name="PROVIDERFIRSTNAME" value="providerFirstName"/>
+			<column name="PROVIDERMIDDLENAME" value="providerMiddleName"/>
+			<column name="PROVIDERLASTNAME" value="providerLastName"/>
+			<column name="VISITDIMENSION" value="Encounter"/>
+			<column name="SKIPPROVIDERHIERARCHY" valueBoolean="false"/>
+			<column name="SKIPDEMOGRAPHICSHIERARCHY" valueBoolean="true"/>
+			<column name="DATAREMOVEMETHOD_ID" valueNumeric="2"/>
+			<column name="METAREMOVEMETHOD_ID" valueNumeric="1"/>
+			<column name="PATIENTDIMENSIONMRN" value="demographics_mrn"/>
+			<column name="PATIENTDIMENSIONRELIGION" value="demographics_religion"/>
+			<column name="PATIENTDIMENSIONLANGUAGE" value="demographics_lang"/>
+			<column name="PATIENTDIMENSIONGENDER" value="demographics_gender"/>
+			<column name="PATIENTDIMENSIONBIRTHDATE" value="demographics_dob"/>
+			<column name="PATIENTDIMENSIONMARITALSTATUS" value="demographics_marital_status"/>
+			<column name="PATIENTDIMENSIONRACE" value="demographics_race"/>
+			<column name="ROOTNODENAME" value="EK"/>
+			<column name="VISITDIMENSIONID" value="visit_id"/>
+			<column name="AGECONCEPTCODEPREFIX" value="DEM|AGE"/>
+			<column name="METATABLENAME" value="EUREKAPHENOTYPEONTOLOGY"/>
+			<column name="METACONNECT" value="java:/comp/env/jdbc/I2b2KS"/>
+			<column name="DATACONNECT" value="java:/comp/env/jdbc/I2b2DS"/>
+		</insert>
+		<insert tableName="I2B2_DEST_CONCEPTSPECS">
+			<column name="ID" valueSequenceNext="I2B2_CS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="PROPOSITION" value="ICD9:Diagnoses"/>
+			<column name="I2B2DESTVALUETYPECDS_ID" valueNumeric="3"/>
+			<column name="ALREADYLOADED" valueNumeric="1"/>
+		</insert>
+		<insert tableName="I2B2_DEST_MODIFIERSPECS">
+			<column name="ID" valueSequenceNext="I2B2_MS_SEQ"/>
+			<column name="I2B2DESTCONCEPTSPECS_ID" valueSequenceCurrent="I2B2_CS_SEQ"/>
+			<column name="NAME" value="Diagnosis Priority"/>
+			<column name="CODEPREFIX" value="DXPRIORITY"/>
+			<column name="PROPERTY" value="DXPRIORITY"/>
+		</insert>
+		<insert tableName="I2B2_DEST_CONCEPTSPECS">
+			<column name="ID" valueSequenceNext="I2B2_CS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="PROPOSITION" value="ICD9:Procedures"/>
+			<column name="I2B2DESTVALUETYPECDS_ID" valueNumeric="3"/>
+			<column name="ALREADYLOADED" valueNumeric="1"/>
+		</insert>
+		<insert tableName="I2B2_DEST_CONCEPTSPECS">
+			<column name="ID" valueSequenceNext="I2B2_CS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="PROPOSITION" value="\ACT\Labs\"/>
+			<column name="I2B2DESTVALUETYPECDS_ID" valueNumeric="1"/>
+			<column name="ALREADYLOADED" valueNumeric="1"/>
+		</insert>
+		<insert tableName="I2B2_DEST_CONCEPTSPECS">
+			<column name="ID" valueSequenceNext="I2B2_CS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="PROPOSITION" value="\ACT\Medications\"/>
+			<column name="I2B2DESTVALUETYPECDS_ID" valueNumeric="3"/>
+			<column name="ALREADYLOADED" valueNumeric="1"/>
+		</insert>
+		<insert tableName="I2B2_DEST_CONCEPTSPECS">
+			<column name="ID" valueSequenceNext="I2B2_CS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="PROPOSITION" value="VitalSign"/>
+			<column name="I2B2DESTVALUETYPECDS_ID" valueNumeric="3"/>
+			<column name="ALREADYLOADED" valueNumeric="1"/>
+		</insert>
+		<insert tableName="I2B2_DEST_DATASPECS">
+			<column name="ID" valueSequenceNext="I2B2_DS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="NAME" value="icd9d"/>
+			<column name="REFERENCE" value="EK_ICD9D"/>
+		</insert>
+		<insert tableName="I2B2_DEST_DATASPECS">
+			<column name="ID" valueSequenceNext="I2B2_DS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="NAME" value="demographics_religion"/>
+			<column name="PROPERTY" value="religion"/>
+			<column name="REFERENCE" value="patientDetails"/>
+			<column name="CONCEPTCODEPREFIX" value="DEM|RELIGION"/>
+			<column name="START_ID" valueNumeric="1"/>
+		</insert>
+		<insert tableName="I2B2_DEST_DATASPECS">
+			<column name="ID" valueSequenceNext="I2B2_DS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="NAME" value="visit_id"/>
+			<column name="PROPERTY" value="encounterId"/>
+		</insert>
+		<insert tableName="I2B2_DEST_DATASPECS">
+			<column name="ID" valueSequenceNext="I2B2_DS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="NAME" value="demographics_dob"/>
+			<column name="PROPERTY" value="dateOfBirth"/>
+			<column name="REFERENCE" value="patientDetails"/>
+		</insert>
+		<insert tableName="I2B2_DEST_DATASPECS">
+			<column name="ID" valueSequenceNext="I2B2_DS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="NAME" value="demographics_mrn"/>
+			<column name="PROPERTY" value="patientId"/>
+			<column name="REFERENCE" value="patientDetails"/>
+		</insert>
+		<insert tableName="I2B2_DEST_DATASPECS">
+			<column name="ID" valueSequenceNext="I2B2_DS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="NAME" value="demographics_lang"/>
+			<column name="PROPERTY" value="language"/>
+			<column name="REFERENCE" value="patientDetails"/>
+			<column name="CONCEPTCODEPREFIX" value="DEM|LANGUAGE"/>
+			<column name="START_ID" valueNumeric="1"/>
+		</insert>
+		<insert tableName="I2B2_DEST_DATASPECS">
+			<column name="ID" valueSequenceNext="I2B2_DS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="NAME" value="demographics_marital_status"/>
+			<column name="PROPERTY" value="maritalStatus"/>
+			<column name="REFERENCE" value="patientDetails"/>
+			<column name="CONCEPTCODEPREFIX" value="DEM|MARITAL"/>
+			<column name="START_ID" valueNumeric="1"/>
+		</insert>
+		<insert tableName="I2B2_DEST_DATASPECS">
+			<column name="ID" valueSequenceNext="I2B2_DS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="NAME" value="demographics_race"/>
+			<column name="PROPERTY" value="race"/>
+			<column name="REFERENCE" value="patientDetails"/>
+			<column name="CONCEPTCODEPREFIX" value="DEM|RACE"/>
+			<column name="START_ID" valueNumeric="1"/>
+		</insert>
+		<insert tableName="I2B2_DEST_DATASPECS">
+			<column name="ID" valueSequenceNext="I2B2_DS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="NAME" value="demographics_ethnicity"/>
+			<column name="PROPERTY" value="ethnicity"/>
+			<column name="REFERENCE" value="patientDetails"/>
+			<column name="START_ID" valueNumeric="1"/>
+		</insert>
+		<insert tableName="I2B2_DEST_DATASPECS">
+			<column name="ID" valueSequenceNext="I2B2_DS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="NAME" value="demographics_gender"/>
+			<column name="PROPERTY" value="gender"/>
+			<column name="REFERENCE" value="patientDetails"/>
+			<column name="CONCEPTCODEPREFIX" value="DEM|SEX"/>
+			<column name="START_ID" valueNumeric="1"/>
+		</insert>
+		<insert tableName="I2B2_DEST_DATASPECS">
+			<column name="ID" valueSequenceNext="I2B2_DS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="NAME" value="providerLastName"/>
+			<column name="PROPERTY" value="lastName"/>
+			<column name="REFERENCE" value="provider"/>
+		</insert>
+		<insert tableName="I2B2_DEST_DATASPECS">
+			<column name="ID" valueSequenceNext="I2B2_DS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="NAME" value="providerMiddleName"/>
+			<column name="PROPERTY" value="middleName"/>
+			<column name="REFERENCE" value="provider"/>
+		</insert>
+		<insert tableName="I2B2_DEST_DATASPECS">
+			<column name="ID" valueSequenceNext="I2B2_DS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="NAME" value="providerFirstName"/>
+			<column name="PROPERTY" value="firstName"/>
+			<column name="REFERENCE" value="provider"/>
+		</insert>
+		<insert tableName="I2B2_DEST_DATASPECS">
+			<column name="ID" valueSequenceNext="I2B2_DS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="NAME" value="providerFullName"/>
+			<column name="PROPERTY" value="fullName"/>
+			<column name="REFERENCE" value="provider"/>
+		</insert>
+		<insert tableName="I2B2_DEST_DATASPECS">
+			<column name="ID" valueSequenceNext="I2B2_DS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="NAME" value="vitals"/>
+			<column name="REFERENCE" value="EK_VITALS"/>
+		</insert>
+		<insert tableName="I2B2_DEST_DATASPECS">
+			<column name="ID" valueSequenceNext="I2B2_DS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="NAME" value="labs"/>
+			<column name="REFERENCE" value="EK_LABS"/>
+		</insert>
+		<insert tableName="I2B2_DEST_DATASPECS">
+			<column name="ID" valueSequenceNext="I2B2_DS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="NAME" value="medOrders"/>
+			<column name="REFERENCE" value="EK_MED_ORDERS"/>
+		</insert>
+		<insert tableName="I2B2_DEST_DATASPECS">
+			<column name="ID" valueSequenceNext="I2B2_DS_SEQ"/>
+			<column name="I2B2DESTINATIONS_ID" valueSequenceCurrent="DEST_SEQ"/>
+			<column name="NAME" value="enctr_type"/>
+			<column name="PROPERTY" value="type"/>
+		</insert>
+		<insert tableName="SOURCECONFIGS">
+			<column name="ID" valueSequenceNext="SOURCECONFIG_SEQ"/>
+			<column name="NAME" value="Spreadsheet"/>
+			<column name="OWNER_ID" valueNumeric="1"/>
+		</insert>
+	</changeSet>
+</databaseChangeLog>
