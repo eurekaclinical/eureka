@@ -179,6 +179,64 @@
 							</resources>
 						</configuration>
 					</execution>
+					<execution>
+						<id>copy-context.xml</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/tomcat-config</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/src/main/resources/tomcat-server-config</directory>
+									<filtering>true</filtering>
+									<includes>
+										<include>context.xml</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-cert</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/tomcat-config</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/src/main/resources/tomcat-server-config</directory>
+									<filtering>false</filtering>
+									<includes>
+										<include>localhost.keystore</include>
+										<include>localhost.truststore</include>
+									</includes>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-logging.properties-file</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/eureka-config</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/src/main/resources/tomcat-eureka-config</directory>
+									<includes>
+										<include>logging.properties</include>
+									</includes>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 			<plugin>

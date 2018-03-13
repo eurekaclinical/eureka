@@ -81,7 +81,10 @@
 <!-- 		url="jdbc:h2:file:${basedir}/target/eureka-db/eurekaclinical-registry-service;LOG=1" -->
 <!-- 		initialSize="3" maxActive="20" maxIdle="7" minIdle="3" -->
 <!-- 		maxWait="10000" validationQuery="SELECT 1" testOnBorrow="true"/> -->
-	<Resource name="jdbc/EurekaBackend" auth="Container"
+<!-- <ResourceLink name="jdbc/mydb" -->
+<!--              global="jdbc/mydb" -->
+<!--               type="javax.sql.DataSource" /> -->
+	<Resource name="jdbc/EurekaBackend" global="jdbc/EurekaBackend" auth="Container"
 		type="javax.sql.DataSource" driverClassName="org.h2.Driver"
 		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
 		url="jdbc:h2:file:${basedir}/target/eureka-db/eureka-backend;LOG=1"
@@ -90,7 +93,7 @@
 	<Resource name="jdbc/I2b2KS" auth="Container"
 		type="javax.sql.DataSource" driverClassName="org.h2.Driver"
 		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
-		url="jdbc:h2:file:${basedir}/target/eureka-db/eureka-ontology;DEFAULT_ESCAPE='';INIT=RUNSCRIPT FROM '${basedir}/eureka-protempa-etl/target/eureka-config/sql/eureka-i2b2-ksb-2-h2.sql';CACHE_SIZE=262400;LOG=1"
+		url="jdbc:h2:file:${basedir}/target/eureka-db/eureka-ontology;DEFAULT_ESCAPE='';INIT=RUNSCRIPT FROM '${basedir}/target/eureka-config/sql/eureka-i2b2-ksb-2-h2.sql';CACHE_SIZE=262400;LOG=1"
 		initialSize="5" maxActive="30" maxIdle="10" minIdle="5"
 		maxWait="10000" validationQuery="SELECT 1" testOnBorrow="true"/>
 	<Resource name="jdbc/I2b2DS" auth="Container"
