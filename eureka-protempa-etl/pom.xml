@@ -22,6 +22,9 @@
 	<properties>
     <maven.javadoc.skip>true</maven.javadoc.skip>
 	<eurekaclinical-ontology-version>2.0</eurekaclinical-ontology-version>
+			<tomcat.port>8000</tomcat.port>
+		<tomcat.httpsPort>8443</tomcat.httpsPort>
+		<maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
 	</properties>
 	<build>
 		<finalName>eureka-protempa-etl</finalName>
