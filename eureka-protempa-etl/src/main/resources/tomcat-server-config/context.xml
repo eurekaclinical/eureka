@@ -1,0 +1,102 @@
+<?xml version='1.0' encoding='utf-8'?>
+<!--
+  #%L
+  Eureka WebApp
+  %%
+  Copyright (C) 2012 - 2013 Emory University
+  %%
+  This program is dual licensed under the Apache 2 and GPLv3 licenses.
+  
+  Apache License, Version 2.0:
+  
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+  
+       http://www.apache.org/licenses/LICENSE-2.0
+  
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+  
+  GNU General Public License version 3:
+  
+  This program is free software: you can redistribute it and/or modify
+  it under the terms of the GNU General Public License as
+  published by the Free Software Foundation, either version 3 of the
+  License, or (at your option) any later version.
+  
+  This program is distributed in the hope that it will be useful,
+  but WITHOUT ANY WARRANTY; without even the implied warranty of
+  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+  GNU General Public License for more details.
+  
+  You should have received a copy of the GNU General Public
+  License along with this program.  If not, see
+  <http://www.gnu.org/licenses/gpl-3.0.html>.
+  #L%
+  -->
+
+<!--
+  Licensed to the Apache Software Foundation (ASF) under one or more
+  contributor license agreements.  See the NOTICE file distributed with
+  this work for additional information regarding copyright ownership.
+  The ASF licenses this file to You under the Apache License, Version 2.0
+  (the "License"); you may not use this file except in compliance with
+  the License.  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<!-- The contents of this file will be loaded for each web application -->
+<Context>
+
+    <!-- Default set of monitored resources -->
+    <WatchedResource>WEB-INF/web.xml</WatchedResource>
+
+<!-- 	<Resource name="jdbc/EurekaService" auth="Container" -->
+<!-- 		type="javax.sql.DataSource" driverClassName="org.h2.Driver" -->
+<!-- 		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" -->
+<!-- 		url="jdbc:h2:file:${basedir}/target/eureka-db/eureka-services;LOG=1" -->
+<!-- 		initialSize="3" maxActive="20" maxIdle="7" minIdle="3" -->
+<!-- 		maxWait="10000" validationQuery="SELECT 1" testOnBorrow="true"/> -->
+<!-- 		initialSize="3" maxActive="20" maxIdle="1" minIdle="1" -->
+<!-- 		maxWait="-1"/> -->
+<!-- 	<Resource name="jdbc/UserService" auth="Container" -->
+<!-- 		type="javax.sql.DataSource" driverClassName="org.h2.Driver" -->
+<!-- 		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" -->
+<!-- 		url="jdbc:h2:file:${basedir}/target/eureka-db/eurekaclinical-user-service;LOG=1" -->
+<!-- 		initialSize="3" maxActive="20" maxIdle="7" minIdle="3" -->
+<!-- 		maxWait="10000" validationQuery="SELECT 1" testOnBorrow="true"/> -->
+<!-- 	<Resource name="jdbc/EurekaClinicalRegistryService" auth="Container" -->
+<!-- 		type="javax.sql.DataSource" driverClassName="org.h2.Driver" -->
+<!-- 		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" -->
+<!-- 		url="jdbc:h2:file:${basedir}/target/eureka-db/eurekaclinical-registry-service;LOG=1" -->
+<!-- 		initialSize="3" maxActive="20" maxIdle="7" minIdle="3" -->
+<!-- 		maxWait="10000" validationQuery="SELECT 1" testOnBorrow="true"/> -->
+	<Resource name="jdbc/EurekaBackend" auth="Container"
+		type="javax.sql.DataSource" driverClassName="org.h2.Driver"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+		url="jdbc:h2:file:${basedir}/target/eureka-db/eureka-backend;LOG=1"
+		initialSize="3" maxActive="20" maxIdle="7" minIdle="3"
+		maxWait="10000" validationQuery="SELECT 1" testOnBorrow="true"/>
+	<Resource name="jdbc/I2b2KS" auth="Container"
+		type="javax.sql.DataSource" driverClassName="org.h2.Driver"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+		url="jdbc:h2:file:${basedir}/target/eureka-db/eureka-ontology;DEFAULT_ESCAPE='';INIT=RUNSCRIPT FROM '${basedir}/eureka-protempa-etl/target/eureka-config/sql/eureka-i2b2-ksb-2-h2.sql';CACHE_SIZE=262400;LOG=1"
+		initialSize="5" maxActive="30" maxIdle="10" minIdle="5"
+		maxWait="10000" validationQuery="SELECT 1" testOnBorrow="true"/>
+	<Resource name="jdbc/I2b2DS" auth="Container"
+		type="javax.sql.DataSource" driverClassName="org.h2.Driver"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+		url="jdbc:h2:file:${basedir}/target/eureka-db/i2b2-data-schema;LOG=1"
+		initialSize="3" maxActive="20" maxIdle="7" minIdle="3"
+		maxWait="10000" validationQuery="SELECT 1" testOnBorrow="true"/>
+</Context>
