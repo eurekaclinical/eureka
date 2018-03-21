@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-
 	<modelVersion>4.0.0</modelVersion>
+	<groupId>org.eurekaclinical</groupId>
 	<artifactId>eureka-protempa-etl</artifactId>
 	<version>3.1-SNAPSHOT</version>
 	<packaging>war</packaging>
@@ -12,147 +12,56 @@
 		phenotypes into an i2b2 project, though ultimately it will support 
 		other export formats.
 	</description>
-	<url>https://github.com/eurekaclinical/eureka.git</url>
 	<inceptionYear>2012</inceptionYear>
+	
 	<parent>
 		<groupId>org.eurekaclinical</groupId>
 		<artifactId>eurekaclinical-parent-standard-deps</artifactId>
 		<version>2</version>
 	</parent>
+	
 	<properties>
-    <maven.javadoc.skip>true</maven.javadoc.skip>
-	<eurekaclinical-ontology-version>2.0</eurekaclinical-ontology-version>
-			<tomcat.port>8003</tomcat.port>
-		<tomcat.httpsPort>8446</tomcat.httpsPort>
-		<maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
-		<cas-server-version>3.0</cas-server-version>
+		<tomcat.port>8080</tomcat.port>
+        <tomcat.httpsPort>8443</tomcat.httpsPort>        
+        <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
+		<commons-codec-version>1.4</commons-codec-version>
+		<eureka-services-version>3.1-SNAPSHOT</eureka-services-version>
+		<eureka-protempa-etl-version>3.1-SNAPSHOT</eureka-protempa-etl-version>
+		<eurekaclinical-ontology-version>2.0</eurekaclinical-ontology-version>
+		<aiw-i2b2-etl-version>3.0</aiw-i2b2-etl-version>
+    	<maven.javadoc.skip>true</maven.javadoc.skip>
+	 	<cas-server-version>3.0</cas-server-version>
 	</properties>
+	
+	<scm>
+		<developerConnection>scm:git:https://github.com/eurekaclinical/eureka.git</developerConnection>
+		<connection>scm:git:https://github.com/eurekaclinical/eureka.git</connection>
+		<url>https://github.com/eurekaclinical/eureka.git</url>
+		<tag>HEAD</tag>
+	</scm>
+
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/eurekaclinical/eureka/issues</url>
+	</issueManagement>
+	
+	<licenses>
+		<license>
+			<name>Apache License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.html</url>
+			<distribution>manual</distribution>
+		</license>
+		<license>
+			<name>GNU General Public License, Version 3</name>
+			<url>http://www.gnu.org/licenses/gpl-3.0-standalone.html</url>
+			<distribution>manual</distribution>
+		</license>
+	</licenses>
+
+
 	<build>
 		<finalName>eureka-protempa-etl</finalName>
 		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.5.1</version>
-		        <configuration>
-		          <source>1.8</source>
-		          <target>1.8</target>
-		        </configuration>
-			</plugin>
-<!-- 			<plugin> -->
-<!-- 				<groupId>org.apache.tomcat.maven</groupId> -->
-<!-- 				<artifactId>tomcat7-maven-plugin</artifactId> -->
-<!-- 				<dependencies> -->
-<!-- 					<dependency> -->
-<!-- 						<groupId>org.jasig.cas.client</groupId> -->
-<!-- 						<artifactId>cas-client-core</artifactId> -->
-<!-- 						<version>${cas-client-version}</version> -->
-<!-- 						<exclusions> -->
-<!-- 							<exclusion> -->
-<!-- 								<groupId>javax.servlet</groupId> -->
-<!-- 								<artifactId>servlet-api</artifactId> -->
-<!-- 							</exclusion> -->
-<!-- 						</exclusions> -->
-<!-- 					</dependency> -->
-<!-- 					</dependencies> -->
-<!-- 			</plugin> -->
-
-<plugin>
-				<groupId>org.apache.tomcat.maven</groupId>
-				<artifactId>tomcat7-maven-plugin</artifactId>
-				<dependencies>
-					<dependency>
-						<groupId>org.jasig.cas.client</groupId>
-						<artifactId>cas-client-core</artifactId>
-						<version>${cas-client-version}</version>
-						<exclusions>
-							<exclusion>
-								<groupId>javax.servlet</groupId>
-								<artifactId>servlet-api</artifactId>
-							</exclusion>
-						</exclusions>
-					</dependency>
-					<dependency>
-						<groupId>commons-codec</groupId>
-						<artifactId>commons-codec</artifactId>
-						<version>1.10</version>
-						<scope>compile</scope>
-					</dependency>
-				</dependencies>
-				<configuration>
-					<warSourceDirectory>${project.build.directory}/${project.build.finalName}</warSourceDirectory>
-					<port>${tomcat.port}</port>
-					<httpsPort>${tomcat.httpsPort}</httpsPort>
-					<keystorePass>changeit</keystorePass>
-					<keystoreFile>conf/localhost.keystore</keystoreFile>
-					<keystoreType>JKS</keystoreType>
-					<additionalConfigFilesDir>${project.build.directory}/tomcat-config</additionalConfigFilesDir>
-					<systemProperties>
-						<org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH>true</org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH>
-						<javax.net.ssl.trustStore>${project.build.directory}/tomcat/conf/localhost.truststore</javax.net.ssl.trustStore>
-						<javax.net.ssl.trustStorePassword>changeit</javax.net.ssl.trustStorePassword>
-						<eureka.config.dir>${project.build.directory}/eureka-config/eureka</eureka.config.dir>
-						<java.util.logging.config.file>${project.build.directory}/eureka-config/logging.properties</java.util.logging.config.file>
-					</systemProperties>
-					<webapps>
-<!-- 						<webapp> -->
-<!-- 							<groupId>org.eurekaclinical</groupId> -->
-<!-- 							<artifactId>eureka-webapp</artifactId> -->
-<!-- 							<version>${project.version}</version> -->
-<!-- 							<type>war</type> -->
-<!-- 							<asWebapp>true</asWebapp> -->
-<!-- 						</webapp> -->
-<!-- 						<webapp> -->
-<!-- 							<groupId>org.eurekaclinical</groupId> -->
-<!-- 							<artifactId>eureka-services</artifactId> -->
-<!-- 							<version>${project.version}</version> -->
-<!-- 							<type>war</type> -->
-<!-- 							<asWebapp>true</asWebapp> -->
-<!-- 						</webapp> -->
-<!-- 						<webapp> -->
-<!-- 							<groupId>org.eurekaclinical</groupId> -->
-<!-- 							<artifactId>eureka-protempa-etl</artifactId> -->
-<!-- 							<version>${project.version}</version> -->
-<!-- 							<type>war</type> -->
-<!-- 							<asWebapp>true</asWebapp> -->
-<!-- 						</webapp> -->
-<!-- 						<webapp> -->
-<!-- 							<groupId>org.eurekaclinical</groupId> -->
-<!-- 							<artifactId>cas-server</artifactId> -->
-<!-- 							<version>${cas-server-version}</version> -->
-<!-- 							<type>war</type> -->
-<!-- 							<asWebapp>true</asWebapp> -->
-<!-- 						</webapp> -->
-<!-- 						<webapp> -->
-<!-- 							<groupId>org.eurekaclinical</groupId> -->
-<!-- 							<artifactId>eurekaclinical-user-webapp</artifactId> -->
-<!-- 							<version>${user-webapp-version}</version> -->
-<!-- 							<type>war</type> -->
-<!-- 							<asWebapp>true</asWebapp> -->
-<!-- 						</webapp>           -->
-<!-- 						<webapp> -->
-<!-- 							<groupId>org.eurekaclinical</groupId> -->
-<!-- 							<artifactId>eurekaclinical-user-service</artifactId> -->
-<!-- 							<version>${user-service-version}</version> -->
-<!-- 							<type>war</type> -->
-<!-- 							<asWebapp>true</asWebapp> -->
-<!-- 						</webapp> -->
-<!-- 						<webapp> -->
-<!-- 							<groupId>org.eurekaclinical</groupId> -->
-<!-- 							<artifactId>eurekaclinical-registry-service</artifactId> -->
-<!-- 							<version>${ec-registry-service-version}</version> -->
-<!-- 							<type>war</type> -->
-<!-- 							<asWebapp>true</asWebapp> -->
-<!-- 						</webapp>                                                                                   -->
-					</webapps>
-					<addContextWarDependencies>true</addContextWarDependencies>
-					<addWarDependenciesInClassloader>false</addWarDependenciesInClassloader>
-				</configuration>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>license-maven-plugin</artifactId>
-			</plugin>
 			<plugin>
 				<groupId>org.jasig.maven</groupId>
 				<artifactId>maven-notice-plugin</artifactId>
@@ -165,237 +74,47 @@
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-eureka-configs</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/eureka-config</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${basedir}/src/main/resources/tomcat-eureka-config</directory>
-									<filtering>true</filtering>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-					<execution>
-						<id>copy-context.xml</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/tomcat-config</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${basedir}/src/main/resources/tomcat-server-config</directory>
-									<filtering>true</filtering>
-									<includes>
-										<include>context.xml</include>
-									</includes>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-					<execution>
-						<id>copy-cert</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/tomcat-config</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${basedir}/src/main/resources/tomcat-server-config</directory>
-									<filtering>false</filtering>
-									<includes>
-										<include>localhost.keystore</include>
-										<include>localhost.truststore</include>
-									</includes>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-					<execution>
-						<id>copy-logging.properties-file</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/eureka-config</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${basedir}/src/main/resources/tomcat-eureka-config</directory>
-									<includes>
-										<include>logging.properties</include>
-									</includes>
-									<filtering>true</filtering>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>license-maven-plugin</artifactId>
-                <version>1.9</version>
-                <configuration>
-                    <licenseName>apache_v2</licenseName>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>first</id>
-                        <goals>
-                            <goal>update-file-header</goal>
-                        </goals>
-                        <phase>process-sources</phase>
-                        <configuration>
-                        <includes>
-                        <include>*.json</include>
-                        </includes>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-sql-from-aiw-i2b2-etl</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>unpack-dependencies</goal>
-						</goals>
-						<configuration>
-							<includeArtifactIds>aiw-i2b2-etl</includeArtifactIds>
-							<includes>
-								sql/i2b2_data_tables_1_7_h2.sql,
-								sql/mock_stored_procedures_h2.sql,
-								dbmigration/i2b2-data-schema-changelog.xml,
-							</includes>
-							<outputDirectory>${project.build.directory}/eureka-config</outputDirectory>
-						</configuration>
-					</execution>
-					<execution>
-						<id>extract-eureka-ontology-h2-db</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>unpack-dependencies</goal>
-						</goals>
-						<configuration>
-							<includeArtifactIds>eurekaclinical-ontology</includeArtifactIds>
-							<includes>
-								eureka-db/eureka-ontology.mv.db,
-								eureka-db/eureka-ontology.trace.db
-							</includes>
-							<outputDirectory>${project.build.directory}</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-	          <groupId>org.codehaus.mojo</groupId>
-	          <artifactId>sql-maven-plugin</artifactId>
-	          <version>1.5</version>
-	          <dependencies>
-	            <dependency>
-	              <groupId>com.h2database</groupId>
-	              <artifactId>h2</artifactId>
-	              <version>1.4.193</version>
-	              <scope>compile</scope>
-	            </dependency>
-	          </dependencies>
-	        </plugin>
-			<plugin>
-				<groupId>org.liquibase</groupId>
-				<artifactId>liquibase-maven-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>liquibase-populate-i2b2-data-schema</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>update</goal>
-						</goals>
-						<configuration>
-							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/i2b2-data-schema-changelog.xml</changeLogFile>
-							<url>jdbc:h2:file:${project.build.directory}/eureka-db/i2b2-data-schema</url>
-							<dropFirst>true</dropFirst>
-						</configuration>
-					</execution>
-					<execution>
-						<id>liquibase-populate-backend-db</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>update</goal>
-						</goals>
-						<configuration>
-							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/eureka-protempa-etl-changelog.xml</changeLogFile>
-							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-backend</url>
-						</configuration>
-					</execution>
-				</executions>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.5.1</version>
+		        <configuration>
+		          <source>1.8</source>
+		          <target>1.8</target>
+		        </configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>sql-maven-plugin</artifactId>
+				<artifactId>license-maven-plugin</artifactId>
+				<configuration>
+					<licenseName>apache2_gpl3</licenseName>
+					<licenseResolver>file:src/license</licenseResolver>
+					<roots>
+						<root>src/main</root>
+						<root>src/test/java/</root>
+					</roots>
+					<extraExtensions>
+						<!-- .xsd files are not supported by default -->
+						<!-- but should be commented in XML style -->
+						<xsd>xml</xsd>
+					</extraExtensions>
+					<excludes>
+						<exclude>**/*.htm</exclude>
+						<exclude>**/*.html</exclude>
+						<exclude>**/*.js</exclude>
+						<exclude>**/*.css</exclude>
+						<exclude>**/*.json</exclude>
+					</excludes>
+				</configuration>
 				<executions>
 					<execution>
-						<id>create-eureka-i2b2-data-schema</id>
-						<phase>process-classes</phase>
+						<id>first</id>
 						<goals>
-							<goal>execute</goal>
+							<goal>update-file-header</goal>
 						</goals>
-						<configuration>
-							<driver>org.h2.Driver</driver>
-							<url>jdbc:h2:file:${project.build.directory}/eureka-db/i2b2-data-schema</url>
-							<fileset>
-							 	<basedir>${project.build.directory}</basedir>
-							 	<includes>
-							 		<include>eureka-config/sql/i2b2_data_tables_1_7_h2.sql</include>
-							 		<include>eureka-config/sql/mock_stored_procedures_h2.sql</include>
-							 	</includes>
-							</fileset>
-							<sqlCommand />
-						</configuration>
+						<phase>process-sources</phase>
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<systemPropertyVariables>
-						<eureka.config.dir>${project.build.directory}/test-classes/eureka-config/eureka</eureka.config.dir>
-					</systemPropertyVariables>
-					<workingDirectory>${project.build.directory}</workingDirectory>
-				</configuration>
-			</plugin>
 		</plugins>
-		<resources>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>true</filtering>
-				<includes>
-					<include>application.properties</include>
-				</includes>
-			</resource>
-			<resource>
-				<directory>src/main/resources</directory>
-				<filtering>false</filtering>
-				<excludes>
-					<exclude>application.properties</exclude>
-				</excludes>
-			</resource>
-		</resources>
 		<testResources>
 			<testResource>
 				<directory>${project.basedir}/src/test/resources</directory>
@@ -410,6 +129,260 @@
 			</testResource>
 		</testResources>
 	</build>
+	<profiles>
+		<profile>
+			<id>tomcat</id>
+			<properties>
+				<cas-server-version>3.0-Alpha-26</cas-server-version>
+				<cas-mock-version>2.0</cas-mock-version>
+				<tomcat.httpsPort>8443</tomcat.httpsPort>
+			</properties>
+
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-resources-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>copy-context.xml</id>
+								<phase>process-resources</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${project.build.directory}/tomcat-config</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${basedir}/src/main/resources/tomcat-server-config</directory>
+											<filtering>true</filtering>
+											<includes>
+												<include>context.xml</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+							<execution>
+								<id>copy-cert</id>
+								<phase>process-resources</phase>
+								<goals>
+									<goal>copy-resources</goal>
+								</goals>
+								<configuration>
+									<outputDirectory>${project.build.directory}/tomcat-config</outputDirectory>
+									<resources>
+										<resource>
+											<directory>${basedir}/src/main/resources/tomcat-server-config</directory>
+											<filtering>false</filtering>
+											<includes>
+												<include>localhost.keystore</include>
+												<include>localhost.truststore</include>
+											</includes>
+										</resource>
+									</resources>
+								</configuration>
+							</execution>
+                            <execution>
+                                <id>copy-logging.properties-file</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.directory}/eureka-config</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${basedir}/src/main/resources/tomcat-eureka-config</directory>
+                                            <includes>
+                                                <include>logging.properties</include>
+                                            </includes>
+                                            <filtering>true</filtering>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+                           <execution>
+                                <id>copy-application.properties-file</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>copy-resources</goal>
+                                </goals>
+                                <configuration>
+                                    <outputDirectory>${project.build.directory}/eureka-config</outputDirectory>
+                                    <resources>
+                                        <resource>
+                                            <directory>${basedir}/src/main/resources/tomcat-eureka-config</directory>
+                                            <includes>
+                                                <include>application.properties</include>
+                                            </includes>
+                                            <filtering>true</filtering>
+                                        </resource>
+                                    </resources>
+                                </configuration>
+                            </execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.tomcat.maven</groupId>
+						<artifactId>tomcat7-maven-plugin</artifactId>
+						<dependencies>
+							<dependency>
+								<groupId>org.jasig.cas.client</groupId>
+								<artifactId>cas-client-core</artifactId>
+								<version>${cas-client-version}</version>
+								<exclusions>
+									<exclusion>
+										<groupId>javax.servlet</groupId>
+										<artifactId>servlet-api</artifactId>
+									</exclusion>
+								</exclusions>
+							</dependency>
+							<dependency>
+								<groupId>commons-codec</groupId>
+								<artifactId>commons-codec</artifactId>
+								<version>${commons-codec-version}</version>
+								<scope>compile</scope>
+							</dependency>
+						</dependencies>
+						<configuration>
+							<warSourceDirectory>${project.build.directory}/${project.build.finalName}</warSourceDirectory>
+							<port>${tomcat.port}</port>
+							<httpsPort>${tomcat.httpsPort}</httpsPort>
+							<keystorePass>changeit</keystorePass>
+							<keystoreFile>conf/localhost.keystore</keystoreFile>
+							<keystoreType>JKS</keystoreType>
+							<additionalConfigFilesDir>${project.build.directory}/tomcat-config</additionalConfigFilesDir>
+							<systemProperties>
+								<org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH>true</org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH>
+								<javax.net.ssl.trustStore>${project.build.directory}/tomcat/conf/localhost.truststore</javax.net.ssl.trustStore>
+								<javax.net.ssl.trustStorePassword>changeit</javax.net.ssl.trustStorePassword>
+								<eureka.config.dir>${project.build.directory}/eureka-config/eureka</eureka.config.dir>
+								<java.util.logging.config.file>${project.build.directory}/eureka-config/logging.properties</java.util.logging.config.file>
+							</systemProperties>
+							<webapps>                                   
+							</webapps>
+							<addContextWarDependencies>true</addContextWarDependencies>
+							<addWarDependenciesInClassloader>false</addWarDependenciesInClassloader>
+						</configuration>
+					</plugin>
+					<plugin>
+					    <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+	                        <execution>
+								<id>extract-eureka-ontology-h2-db</id>
+								<phase>generate-resources</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+								<configuration>
+									<artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.eurekaclinical</groupId>
+                                            <artifactId>eurekaclinical-ontology</artifactId>
+                                            <version>${eurekaclinical-ontology-version}</version> 
+                                        </artifactItem>
+                                    </artifactItems>
+									<includes>
+										eureka-db/eureka-ontology.mv.db,
+										eureka-db/eureka-ontology.trace.db
+									</includes>
+									<outputDirectory>${project.build.directory}</outputDirectory>
+								</configuration>
+							</execution>
+							<execution>
+								<id>copy-sql-from-aiw-i2b2-etl</id>
+								<phase>generate-resources</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+								</goals>
+								<configuration> 
+									<artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.eurekaclinical</groupId>
+                                            <artifactId>aiw-i2b2-etl</artifactId>
+                                            <version>${aiw-i2b2-etl-version}</version> 
+                                        </artifactItem>
+                                    </artifactItems>
+									<includes>
+		 										sql/i2b2_data_tables_1_7_h2.sql, 
+												sql/mock_stored_procedures_h2.sql,
+										dbmigration/i2b2-data-schema-changelog.xml,
+									</includes>
+									<outputDirectory>${project.build.directory}/}/eureka-config</outputDirectory>
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.liquibase</groupId>
+                        <artifactId>liquibase-maven-plugin</artifactId>
+                        <executions>
+                        	  <execution>
+                                <id>liquibase-populate-i2b2-data-schema-db</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>update</goal>
+                                </goals>
+                                <configuration>
+                                    <changeLogFile>${project.build.directory}/protempa-config/dbmigration/i2b2-data-schema-changelog.xml</changeLogFile>
+                                    <url>jdbc:h2:file:${project.build.directory}/eureka-db/i2b2-data-schema</url>
+                                    <dropFirst>true</dropFirst>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>liquibase-populate-eureka-backend-db</id>
+                                <phase>process-resources</phase>
+                                <goals>
+                                    <goal>update</goal>
+                                </goals>
+                                <configuration>
+                                    <changeLogFile>${project.build.directory}/eureka-config/dbmigration/eureka-protempa-etl-changelog.xml</changeLogFile>
+                                    <url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-backend</url>
+                                </configuration>
+                            </execution>
+                        </executions>
+                      </plugin>
+					<plugin>
+						<groupId>org.codehaus.mojo</groupId>
+						<artifactId>sql-maven-plugin</artifactId>
+						<executions>
+							<execution>
+								<id>create-eureka-i2b2-data-schema</id>
+								<phase>process-classes</phase>
+								<goals>
+									<goal>execute</goal>
+								</goals>
+								<configuration>
+									<driver>org.h2.Driver</driver>
+									<url>jdbc:h2:file:${project.build.directory}/eureka-db/i2b2-data-schema</url>
+									<fileset>
+									 	<basedir>${project.build.directory}</basedir>
+									 	<includes>
+									 		<include>eureka-config/sql/i2b2_data_tables_1_7_h2.sql</include>
+									 		<include>eureka-config/sql/mock_stored_procedures_h2.sql</include>
+									 	</includes>
+									</fileset>
+									<sqlCommand />
+								</configuration>
+							</execution>
+						</executions>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<systemPropertyVariables>
+								<eureka.config.dir>${project.build.directory}/test-classes/eureka-config/eureka</eureka.config.dir>
+							</systemPropertyVariables>
+							<workingDirectory>${project.build.directory}</workingDirectory>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 	<dependencies>
 		<dependency>
 			<groupId>com.sun.jersey.jersey-test-framework</groupId>
