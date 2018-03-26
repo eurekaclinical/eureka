@@ -2,7 +2,7 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.eurekaclinical</groupId>
-	<artifactId>eureka-protempa-etl</artifactId>
+	<artifactId>eurekaclinical-protempa-service</artifactId>
 	<version>3.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>Eureka Protempa ETL</name>
@@ -25,8 +25,6 @@
         <tomcat.httpsPort>8443</tomcat.httpsPort>        
         <maven.build.timestamp.format>yyyyMMddHHmmss</maven.build.timestamp.format>
 		<commons-codec-version>1.4</commons-codec-version>
-		<eureka-services-version>3.1-SNAPSHOT</eureka-services-version>
-		<eureka-protempa-etl-version>3.1-SNAPSHOT</eureka-protempa-etl-version>
 		<eurekaclinical-ontology-version>2.0</eurekaclinical-ontology-version>
 		<aiw-i2b2-etl-version>3.0</aiw-i2b2-etl-version>
     	<maven.javadoc.skip>true</maven.javadoc.skip>
@@ -60,7 +58,7 @@
 
 
 	<build>
-		<finalName>eureka-protempa-etl</finalName>
+		<finalName>eurekaclinical-protempa-service</finalName>
 		<plugins>
 			<plugin>
 				<groupId>org.jasig.maven</groupId>
@@ -81,6 +79,56 @@
 		          <target>1.8</target>
 		        </configuration>
 			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-resources-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>copy-eureka-configs</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/eureka-config</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/src/main/resources/tomcat-eureka-config</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+					<execution>
+						<id>copy-test-eureka-configs</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>copy-resources</goal>
+						</goals>
+						<configuration>
+							<outputDirectory>${project.build.directory}/eureka-config</outputDirectory>
+							<resources>
+								<resource>
+									<directory>${basedir}/src/test/resources/eureka-config</directory>
+									<filtering>true</filtering>
+								</resource>
+							</resources>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<systemPropertyVariables>
+								<eureka.config.dir>${project.build.directory}/test-classes/eureka-config/eureka</eureka.config.dir>
+							</systemPropertyVariables>
+							<workingDirectory>${project.build.directory}</workingDirectory>
+						</configuration>
+					</plugin>
+							
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
@@ -102,6 +150,7 @@
 						<exclude>**/*.js</exclude>
 						<exclude>**/*.css</exclude>
 						<exclude>**/*.json</exclude>
+						<exclude>**/*.sql</exclude>
 					</excludes>
 				</configuration>
 				<executions>
@@ -114,42 +163,13 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-resources-plugin</artifactId>
-				<executions>
-					<execution>
-						<id>copy-eureka-configs</id>
-						<phase>process-classes</phase>
-						<goals>
-							<goal>copy-resources</goal>
-						</goals>
-						<configuration>
-							<outputDirectory>${project.build.directory}/eureka-config</outputDirectory>
-							<resources>
-								<resource>
-									<directory>${basedir}/src/main/resources/tomcat-eureka-config</directory>
-									<filtering>true</filtering>
-								</resource>
-							</resources>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>sql-maven-plugin</artifactId>
-				<version>1.5</version>
-				<dependencies>
-					<dependency>
-						<groupId>com.h2database</groupId>
-						<artifactId>h2</artifactId>
-						<version>1.4.193</version>
-						<scope>compile</scope>
-					</dependency>
-				</dependencies>
-			</plugin>
 		</plugins>
+		<resources>
+			<resource>
+				<directory>src/main/resources</directory>
+				<filtering>true</filtering>
+			</resource>
+		</resources>
 		<testResources>
 			<testResource>
 				<directory>${project.basedir}/src/test/resources</directory>
@@ -157,10 +177,10 @@
 			</testResource>
 			<testResource>
 				<directory>${project.basedir}/src/test/resources</directory>
+				<filtering>true</filtering>
 				<includes>
 					<include>eureka-config/eureka/sourceconfig/foo</include>
 				</includes>
-				<filtering>true</filtering>
 			</testResource>
 		</testResources>
 	</build>
@@ -228,7 +248,7 @@
                                     <outputDirectory>${project.build.directory}/eureka-config</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${basedir}/src/main/resources/tomcat-eureka-config</directory>
+                                            <directory>${basedir}/src/main/resources</directory>
                                             <includes>
                                                 <include>logging.properties</include>
                                             </includes>
@@ -244,10 +264,10 @@
                                     <goal>copy-resources</goal>
                                 </goals>
                                 <configuration>
-                                    <outputDirectory>${project.build.directory}/eureka-config</outputDirectory>
+                                    <outputDirectory>${project.build.directory}/eureka-config/eureka</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${basedir}/src/main/resources/tomcat-eureka-config</directory>
+                                            <directory>${basedir}/src/main/resources</directory>
                                             <filtering>true</filtering>
                                             <includes>
                                                 <include>application.properties</include>
@@ -295,7 +315,14 @@
 								<eureka.config.dir>${project.build.directory}/eureka-config/eureka</eureka.config.dir>
 								<java.util.logging.config.file>${project.build.directory}/eureka-config/logging.properties</java.util.logging.config.file>
 							</systemProperties>
-							<webapps>                                   
+							<webapps>    
+								<webapp>
+                                    <groupId>org.eurekaclinical</groupId>
+                                    <artifactId>cas-mock</artifactId>
+                                    <version>${cas-mock-version}</version>
+                                    <type>war</type>
+                                    <asWebapp>true</asWebapp>
+                                </webapp>                               
 							</webapps>
 							<addContextWarDependencies>true</addContextWarDependencies>
 							<addWarDependenciesInClassloader>false</addWarDependenciesInClassloader>
