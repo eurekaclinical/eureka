@@ -74,10 +74,10 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>3.5.1</version>
-		        <configuration>
-		          <source>1.8</source>
-		          <target>1.8</target>
-		        </configuration>
+				<configuration>
+					<source>1.8</source>
+					<target>1.8</target>
+				</configuration>
 			</plugin>
 
 			<plugin>
@@ -118,96 +118,95 @@
 					</execution>
 				</executions>
 			</plugin>
-					<plugin>
-						<groupId>org.apache.maven.plugins</groupId>
-						<artifactId>maven-surefire-plugin</artifactId>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<configuration>
+					<systemPropertyVariables>
+						<eureka.config.dir>${project.build.directory}/test-classes/eureka-config/eureka</eureka.config.dir>
+					</systemPropertyVariables>
+					<workingDirectory>${project.build.directory}</workingDirectory>
+				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>extract-eureka-ontology-h2-db</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
 						<configuration>
-							<systemPropertyVariables>
-								<eureka.config.dir>${project.build.directory}/test-classes/eureka-config/eureka</eureka.config.dir>
-							</systemPropertyVariables>
-							<workingDirectory>${project.build.directory}</workingDirectory>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.eurekaclinical</groupId>
+									<artifactId>eurekaclinical-ontology</artifactId>
+									<version>${eurekaclinical-ontology-version}</version>
+								</artifactItem>
+							</artifactItems>
+							<includes>
+								eureka-db/eureka-ontology.mv.db,
+								eureka-db/eureka-ontology.trace.db
+							</includes>
+							<outputDirectory>${project.build.directory}</outputDirectory>
 						</configuration>
-					</plugin>
-							
-												<plugin>
-					    <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-dependency-plugin</artifactId>
-                        <executions>
-	                        <execution>
-								<id>extract-eureka-ontology-h2-db</id>
-								<phase>generate-resources</phase>
-                                <goals>
-                                    <goal>unpack</goal>
-                                </goals>
-								<configuration>
-									<artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.eurekaclinical</groupId>
-                                            <artifactId>eurekaclinical-ontology</artifactId>
-                                            <version>${eurekaclinical-ontology-version}</version> 
-                                        </artifactItem>
-                                    </artifactItems>
-									<includes>
-										eureka-db/eureka-ontology.mv.db,
-										eureka-db/eureka-ontology.trace.db
-									</includes>
-									<outputDirectory>${project.build.directory}</outputDirectory>
-								</configuration>
-							</execution>
-							<execution>
-								<id>copy-sql-from-aiw-i2b2-etl</id>
-								<phase>generate-resources</phase>
-                                <goals>
-                                    <goal>unpack</goal>
-								</goals>
-								<configuration> 
-									<artifactItems>
-                                        <artifactItem>
-                                            <groupId>org.eurekaclinical</groupId>
-                                            <artifactId>aiw-i2b2-etl</artifactId>
-                                            <version>${aiw-i2b2-etl-version}</version> 
-                                        </artifactItem>
-                                    </artifactItems>
-									<includes>
-		 										sql/i2b2_data_tables_1_7_h2.sql, 
-												sql/mock_stored_procedures_h2.sql,
-										dbmigration/i2b2-data-schema-changelog.xml,
-									</includes>
-									<outputDirectory>${project.build.directory}/eureka-config</outputDirectory>
-								</configuration>
-							</execution>
-						</executions>
-					</plugin>
-					<plugin>
-						<groupId>org.liquibase</groupId>
-                        <artifactId>liquibase-maven-plugin</artifactId>
-                        <executions>
-                        	  <execution>
-                                <id>liquibase-populate-i2b2-data-schema-db</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>update</goal>
-                                </goals>
-                                <configuration>
-                                    <changeLogFile>${project.build.directory}/eureka-config/dbmigration/i2b2-data-schema-changelog.xml</changeLogFile>
-                                    <url>jdbc:h2:file:${project.build.directory}/eureka-db/i2b2-data-schema</url>
-                                    <dropFirst>true</dropFirst>
-                                </configuration>
-                            </execution>
-                            <execution>
-                                <id>liquibase-populate-eureka-backend-db</id>
-                                <phase>process-resources</phase>
-                                <goals>
-                                    <goal>update</goal>
-                                </goals>
-                                <configuration>
-                                    <changeLogFile>${project.build.directory}/eureka-config/dbmigration/eureka-protempa-etl-changelog.xml</changeLogFile>
-                                    <url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-backend</url>
-                                </configuration>
-                            </execution>
-                        </executions>
-                      </plugin>
-							
+					</execution>
+					<execution>
+						<id>copy-sql-from-aiw-i2b2-etl</id>
+						<phase>generate-resources</phase>
+						<goals>
+							<goal>unpack</goal>
+						</goals>
+						<configuration>
+							<artifactItems>
+								<artifactItem>
+									<groupId>org.eurekaclinical</groupId>
+									<artifactId>aiw-i2b2-etl</artifactId>
+									<version>${aiw-i2b2-etl-version}</version>
+								</artifactItem>
+							</artifactItems>
+							<includes>
+								sql/i2b2_data_tables_1_7_h2.sql,
+								sql/mock_stored_procedures_h2.sql,
+								dbmigration/i2b2-data-schema-changelog.xml,
+							</includes>
+							<outputDirectory>${project.build.directory}/eureka-config</outputDirectory>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.liquibase</groupId>
+				<artifactId>liquibase-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<id>liquibase-populate-i2b2-data-schema-db</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>update</goal>
+						</goals>
+						<configuration>
+							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/i2b2-data-schema-changelog.xml</changeLogFile>
+							<url>jdbc:h2:file:${project.build.directory}/eureka-db/i2b2-data-schema</url>
+							<dropFirst>true</dropFirst>
+						</configuration>
+					</execution>
+					<execution>
+						<id>liquibase-populate-eureka-backend-db</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>update</goal>
+						</goals>
+						<configuration>
+							<changeLogFile>${project.build.directory}/eureka-config/dbmigration/eureka-protempa-etl-changelog.xml</changeLogFile>
+							<url>jdbc:h2:file:${project.build.directory}/eureka-db/eureka-backend</url>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
 				<artifactId>license-maven-plugin</artifactId>
@@ -246,6 +245,10 @@
 		<resources>
 			<resource>
 				<directory>src/main/resources</directory>
+				<filtering>false</filtering>
+			</resource>
+			<resource>
+				<directory>src/main/resources</directory>
 				<filtering>true</filtering>
 			</resource>
 		</resources>
@@ -263,6 +266,7 @@
 			</testResource>
 		</testResources>
 	</build>
+	
 	<profiles>
 		<profile>
 			<id>tomcat</id>
@@ -337,7 +341,7 @@
                                     </resources>
                                 </configuration>
                             </execution>
-                           <execution>
+                            <execution>
                                 <id>copy-application.properties-file</id>
                                 <phase>process-resources</phase>
                                 <goals>
@@ -347,11 +351,8 @@
                                     <outputDirectory>${project.build.directory}/eureka-config/eureka</outputDirectory>
                                     <resources>
                                         <resource>
-                                            <directory>${basedir}/src/main/resources</directory>
+                                            <directory>${basedir}/src/main/resources/tomcat-eureka-config/eureka</directory>
                                             <filtering>true</filtering>
-                                            <includes>
-                                                <include>application.properties</include>
-                                            </includes>
                                         </resource>
                                     </resources>
                                 </configuration>
