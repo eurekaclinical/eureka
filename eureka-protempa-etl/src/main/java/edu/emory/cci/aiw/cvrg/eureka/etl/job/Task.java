@@ -219,6 +219,7 @@ public class Task implements Runnable {
 		this.jobDao.update(myJob);
 	}
 
+	@Transactional
 	private void handleError(Throwable e) {
 		JobEntity job = this.jobDao.retrieve(this.jobId);
 		LOGGER.error("Job " + job.getId() + " for user "
