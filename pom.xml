@@ -5,7 +5,7 @@
     <artifactId>eurekaclinical-protempa-service</artifactId>
     <version>3.1-SNAPSHOT</version>
     <packaging>war</packaging>
-    <name>Eureka Protempa ETL</name>
+    <name>Eureka! Clinical Protempa Service</name>
     <description>Eureka Protempa ETL is the backend data processing layer of
         Eureka! Clinical Analytics. It performs clinical phenotyping using the
         Protempa software framework. It currently loads data and found
@@ -523,7 +523,7 @@
         <dependency>
             <groupId>org.eurekaclinical</groupId>
             <artifactId>eurekaclinical-protempa-client</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>1.0-Alpha-1</version>
         </dependency>
     </dependencies>
 </project>
