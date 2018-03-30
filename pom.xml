@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.eurekaclinical</groupId>
     <artifactId>eurekaclinical-protempa-service</artifactId>
-    <version>3.1-SNAPSHOT</version>
+    <version>1.0-Alpha-1</version>
     <packaging>war</packaging>
     <name>Eureka! Clinical Protempa Service</name>
     <description>Eureka Protempa ETL is the backend data processing layer of
@@ -35,7 +35,7 @@
         <developerConnection>scm:git:https://github.com/eurekaclinical/eureka.git</developerConnection>
         <connection>scm:git:https://github.com/eurekaclinical/eureka.git</connection>
         <url>https://github.com/eurekaclinical/eureka.git</url>
-        <tag>HEAD</tag>
+        <tag>eurekaclinical-protempa-service-1.0-Alpha-1</tag>
     </scm>
 
     <issueManagement>
