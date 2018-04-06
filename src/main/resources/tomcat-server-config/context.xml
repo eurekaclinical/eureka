@@ -69,12 +69,12 @@
 <!-- 		maxWait="10000" validationQuery="SELECT 1" testOnBorrow="true"/> -->
 <!-- 		initialSize="3" maxActive="20" maxIdle="1" minIdle="1" -->
 <!-- 		maxWait="-1"/> -->
-<!-- 	<Resource name="jdbc/UserService" auth="Container" -->
-<!-- 		type="javax.sql.DataSource" driverClassName="org.h2.Driver" -->
-<!-- 		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" -->
-<!-- 		url="jdbc:h2:file:${basedir}/target/eureka-db/eurekaclinical-user-service;LOG=1" -->
-<!-- 		initialSize="3" maxActive="20" maxIdle="7" minIdle="3" -->
-<!-- 		maxWait="10000" validationQuery="SELECT 1" testOnBorrow="true"/> -->
+	<Resource name="jdbc/UserService" auth="Container"
+		type="javax.sql.DataSource" driverClassName="org.h2.Driver"
+		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory"
+		url="jdbc:h2:file:${basedir}/target/eureka-db/eurekaclinical-user-service;LOG=1"
+		initialSize="3" maxActive="20" maxIdle="7" minIdle="3"
+		maxWait="10000" validationQuery="SELECT 1" testOnBorrow="true"/>
 <!-- 	<Resource name="jdbc/EurekaClinicalRegistryService" auth="Container" -->
 <!-- 		type="javax.sql.DataSource" driverClassName="org.h2.Driver" -->
 <!-- 		factory="org.apache.tomcat.jdbc.pool.DataSourceFactory" -->
