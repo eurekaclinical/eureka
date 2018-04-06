@@ -29,7 +29,7 @@
         <aiw-i2b2-etl-version>3.0</aiw-i2b2-etl-version>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <cas-server-version>3.0</cas-server-version>
-        <user-service-version>1.0.1</user-service-version>
+        <user-service-version>2.0-Alpha-2</user-service-version>
     </properties>
 	
     <scm>
