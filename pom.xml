@@ -14,11 +14,11 @@
     </description>
     <inceptionYear>2012</inceptionYear>
 
-	<parent>
-		<groupId>org.eurekaclinical</groupId>
-		<artifactId>eurekaclinical-parent-standard-deps</artifactId>
-		<version>3-Alpha-2</version>
-	</parent>
+    <parent>
+        <groupId>org.eurekaclinical</groupId>
+        <artifactId>eurekaclinical-parent-standard-deps</artifactId>
+        <version>3-Alpha-2</version>
+    </parent>
 	
     <properties>
         <tomcat.port>8080</tomcat.port>
@@ -28,8 +28,6 @@
         <eurekaclinical-ontology-version>2.0</eurekaclinical-ontology-version>
         <aiw-i2b2-etl-version>3.0</aiw-i2b2-etl-version>
         <maven.javadoc.skip>true</maven.javadoc.skip>
-        <cas-server-version>3.0</cas-server-version>
-        <user-service-version>2.0-Alpha-2</user-service-version>
     </properties>
 	
     <scm>
@@ -142,6 +140,16 @@
                     </execution>
                 </executions>
             </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <configuration>
+                    <systemPropertyVariables>
+                        <eureka.config.dir>${project.build.directory}/test-classes/eureka-config/eureka</eureka.config.dir>
+                    </systemPropertyVariables>
+                    <workingDirectory>${project.build.directory}</workingDirectory>
+                </configuration>
+            </plugin>
         </plugins>
         <resources>
             <resource>
@@ -181,8 +189,6 @@
         <profile>
             <id>tomcat</id>
             <properties>
-                <embedded-webserver-port>8000</embedded-webserver-port>
-                <cas-server-version>3.0-Alpha-26</cas-server-version>
                 <cas-mock-version>2.0</cas-mock-version>
                 <tomcat.httpsPort>8443</tomcat.httpsPort>
             </properties>
@@ -269,7 +275,6 @@
                             </execution>
                         </executions>
                     </plugin>
-
                     <plugin>
                         <groupId>org.codehaus.cargo</groupId>
                         <artifactId>cargo-maven2-plugin</artifactId>
@@ -283,39 +288,18 @@
                                     <artifactId>cas-mock</artifactId> 
                                     <type>war</type>
                                 </deployable>
-                                <deployable>
-                                	<groupId>org.eurekaclinical</groupId>
-									<artifactId>eurekaclinical-user-service</artifactId> 
-									<type>war</type> 
-                                </deployable>
-                             </deployables>
+                            </deployables>
+                            <configuration>
+                                <properties>
+                                    <cargo.jvmargs>-Xmx4G</cargo.jvmargs>
+                                </properties>
+                            </configuration>
                         </configuration>
                     </plugin>
                     <plugin>
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-dependency-plugin</artifactId>
                         <executions>
-                        	<execution>
-								<id>copy-dbmigration-from-eurekaclinical-user-service</id>
-								<phase>generate-resources</phase>
-								<goals>
-									<goal>unpack</goal>
-								</goals>
-								<configuration>
-									<artifactItems>
-										<artifactItem>
-											<groupId>org.eurekaclinical</groupId>
-											<artifactId>eurekaclinical-user-service</artifactId>
-											<version>${user-service-version}</version>
-											<type>war</type>
-										</artifactItem>
-									</artifactItems>
-									<includes>
-										WEB-INF/classes/dbmigration/changelog-master.xml
-									</includes>
-									<outputDirectory>${project.build.directory}/eurekaclinical-user-service</outputDirectory>
-								</configuration>
-							</execution>
                             <execution>
                                 <id>extract-eureka-ontology-h2-db</id>
                                 <phase>generate-resources</phase>
@@ -365,43 +349,6 @@
                         <groupId>org.liquibase</groupId>
                         <artifactId>liquibase-maven-plugin</artifactId>
                         <executions>
-                        	<execution>
-								<id>liquibase-populate-user-service-db</id>
-								<phase>process-resources</phase>
-								<goals>
-									<goal>update</goal>
-								</goals>
-								<configuration>
-									<expressionVars>
-										<property>
-											<name>eureka.superuser.email</name>
-											<value>no-reply@localhost</value>
-										</property>
-										<property>
-											<name>eureka.superuser.firstname</name>
-											<value>super</value>
-										</property>
-										<property>
-											<name>eureka.superuser.lastname</name>
-											<value>user</value>
-										</property>
-										<property>
-											<name>eureka.superuser.password</name>
-											<value>4656fd365a7b2a27efb753bca9b9cf1</value>
-										</property>
-										<property>
-											<name>eureka.superuser.username</name>
-											<value>superuser</value>
-										</property>
-										<property>
-											<name>eureka.superuser.fullname</name>
-											<value>Superuser</value>
-										</property>
-									</expressionVars>
-									<changeLogFile>${project.build.directory}/eurekaclinical-user-service/WEB-INF/classes/dbmigration/changelog-master.xml</changeLogFile>
-									<url>jdbc:h2:file:${project.build.directory}/eureka-db/eurekaclinical-user-service</url>
-								</configuration>
-							</execution>
                             <execution>
                                 <id>liquibase-populate-i2b2-data-schema-db</id>
                                 <phase>process-resources</phase>
@@ -433,7 +380,7 @@
                         <executions>
                             <execution>
                                 <id>create-eureka-i2b2-data-schema</id>
-                                <phase>process-classes</phase>
+                                <phase>process-resources</phase>
                                 <goals>
                                     <goal>execute</goal>
                                 </goals>
@@ -452,46 +399,29 @@
                             </execution>
                         </executions>
                     </plugin>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-surefire-plugin</artifactId>
-                        <configuration>
-                            <systemPropertyVariables>
-                                <eureka.config.dir>${project.build.directory}/test-classes/eureka-config/eureka</eureka.config.dir>
-                            </systemPropertyVariables>
-                            <workingDirectory>${project.build.directory}</workingDirectory>
-                        </configuration>
-                    </plugin>
                 </plugins>
             </build>
-			<dependencies>
-				<dependency>
-					<groupId>org.eurekaclinical</groupId>
-					<artifactId>eurekaclinical-ontology</artifactId>
-					<version>${eurekaclinical-ontology-version}</version>
-					<scope>runtime</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.eurekaclinical</groupId>
-					<artifactId>aiw-i2b2-etl</artifactId>
-					<version>${aiw-i2b2-etl-version}</version>
-					<scope>runtime</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.eurekaclinical</groupId>
-					<artifactId>cas-mock</artifactId>
-					<version>${cas-mock-version}</version>
-					<type>war</type>
-					<scope>runtime</scope>
-				</dependency>
-				<dependency>
-					<groupId>org.eurekaclinical</groupId>
-					<artifactId>eurekaclinical-user-service</artifactId>
-					<version>${user-service-version}</version>
-					<type>war</type>
-					<scope>runtime</scope>
-				</dependency>
-			</dependencies>
+            <dependencies>
+                <dependency>
+                    <groupId>org.eurekaclinical</groupId>
+                    <artifactId>eurekaclinical-ontology</artifactId>
+                    <version>${eurekaclinical-ontology-version}</version>
+                    <scope>runtime</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.eurekaclinical</groupId>
+                    <artifactId>aiw-i2b2-etl</artifactId>
+                    <version>${aiw-i2b2-etl-version}</version>
+                    <scope>runtime</scope>
+                </dependency>
+                <dependency>
+                    <groupId>org.eurekaclinical</groupId>
+                    <artifactId>cas-mock</artifactId>
+                    <version>${cas-mock-version}</version>
+                    <type>war</type>
+                    <scope>runtime</scope>
+                </dependency>
+            </dependencies>
         </profile>
     </profiles>
     <dependencies>
