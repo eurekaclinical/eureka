@@ -189,7 +189,7 @@
         <profile>
             <id>tomcat</id>
             <properties>
-                <cas-mock-version>2.0</cas-mock-version>
+                <cas-mock-version>2.1-Beta-1</cas-mock-version>
                 <tomcat.httpsPort>8443</tomcat.httpsPort>
             </properties>
 
